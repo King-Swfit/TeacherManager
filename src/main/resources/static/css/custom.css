@@ -1,0 +1,19 @@
+.order {
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+}
+.order .line {
+    display: inline-block;
+    width: 46%;
+    border-top: 1px solid #ccc ;
+}
+.order .txt {
+    color: #686868;
+    vertical-align: middle;
+}
+
+td{
+    vertical-align:middle;
+    text-align:center;
+}

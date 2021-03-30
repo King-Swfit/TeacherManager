@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haitong.youcai.mapper.LearnProducerMapper">
+    <select id="listTalkTypes" resultType="String">
+        select ttname from process_talk_type
+    </select>
+    <select id="getBaseinfoForTraineeByCondition" parameterType="String" resultType="com.haitong.youcai.entity.BaseinfoForTrainee">
+        select code,trname name from baseinfo_trainee WHERE classcode=#{arg0} AND talkType=#{arg1}
+    </select>
+
+    <select id="getBaseinfoForTraineeByClassCode" parameterType="String" resultType="com.haitong.youcai.entity.BaseinfoForTrainee">
+        select code,trname name from baseinfo_trainee WHERE classcode=#{arg0}
+    </select>
+
+
+
+    <select id="getClassCodesByCondition"  resultType="String">
+        select classcode from class_baseinfo
+        WHERE
+        beginDate BETWEEN #{arg2} AND #{arg3}
+        <!--<if test="arg0 > 0"> AND centerId=#{arg0}</if>-->
+        <if test="arg1 > 0">AND classteacherId=#{arg1}</if>
+    </select>
+
+    <select id="listLearnStates"  resultType="String">
+        select lname from process_learn_state
+    </select>
+
+
+    <insert id="saveTalkInfo"  parameterType="com.haitong.youcai.entity.Talk" useGeneratedKeys="true" keyProperty="tid">
+        INSERT INTO talk(ttime,code,classcode,talkType, tcontent,learnState,result)
+        VALUES(#{ttime},#{code},#{classcode},#{talkType}, #{tcontent},#{learnState},#{result})
+    </insert>
+
+
+    <update id="updateTalkInfo"  parameterType="com.haitong.youcai.entity.Talk">
+        UPDATE talk SET
+        learnState=#{learnState},talkType=#{talkType},tcontent=#{tcontent},result=#{result}
+        WHERE tid=#{tid}
+    </update>
+
+
+    <select id="getTalksByClassCode" parameterType="String" resultType="com.haitong.youcai.entity.Talk">
+        select talk.tid tid, talk.ttime ttime, talk.code code, talk.classcode classcode, talk.talkType talkType,
+        talk.tcontent tcontent, talk.learnState learnState, talk.result result, baseinfo_trainee.trname name
+         from talk, baseinfo_trainee
+         WHERE talk.classcode=#{arg0} AND talk.code=baseinfo_trainee.code
+    </select>
+
+
+    <select id="getTalksByClassCodeAndTalkType" parameterType="String" resultType="com.haitong.youcai.entity.Talk">
+         select talk.tid tid, talk.ttime ttime, talk.code code, talk.classcode classcode, talk.talkType talkType,
+        talk.tcontent tcontent, talk.learnState learnState, talk.result result, baseinfo_trainee.trname name
+         from talk, baseinfo_trainee WHERE talk.classcode=#{arg0} AND talkType=#{arg1} AND talk.code=baseinfo_trainee.code
+    </select>
+
+
+
+
+
+    <select id="getTalkSummaryByCondition"  resultType="com.haitong.youcai.entity.SimpleTalkSummary">
+        SELECT t.classcode classcode, t.talkType talkType, COUNT(*) count
+        FROM talk t<if test="arg0 != '-1'"> INNER JOIN class_baseinfo c</if>
+        WHERE
+        t.ttime LIKE  CONCAT(#{arg1},'%')
+        <if test="arg0 != '-1'"> AND t.classcode=c.classcode AND c.classteacherId=#{arg0}</if>
+        GROUP BY t.classcode,t.talkType
+    </select>
+    <!--List<SummaryTalk> summaryTalkInfosByCtid(int ctid);-->
+
+    <select id="getTalkSummaryByCondition2"  resultType="com.haitong.youcai.entity.SimpleTalkSummary">
+        SELECT t.classcode classcode, t.talkType talkType, COUNT(*) count
+        FROM talk t<if test="arg0 != '-1'"> INNER JOIN class_baseinfo c</if>
+        WHERE
+        t.ttime LIKE  CONCAT(#{arg1},'%')
+        AND t.result='目标达成'
+        <if test="arg0 != '-1'"> AND t.classcode=c.classcode AND c.classteacherId=#{arg0}</if>
+        GROUP BY t.classcode,t.talkType
+    </select>
+
+
+    <select id="getTalkSummaryByCondition3"  resultType="com.haitong.youcai.entity.KV">
+        SELECT t.classcode k, COUNT(*)  v
+        FROM talk t<if test="arg0 != '-1'"> INNER JOIN class_baseinfo c</if>
+        WHERE
+        t.ttime LIKE  CONCAT(#{arg1},'%')
+        <if test="arg0 != '-1'"> AND t.classcode=c.classcode AND c.classteacherId=#{arg0}</if>
+        GROUP BY t.classcode
+    </select>
+
+
+    <select id="getTalkSummaryBySection"  resultType="com.haitong.youcai.entity.SimpleTalkSummary">
+        SELECT  t.classcode as classcode, DATE_FORMAT(t.ttime,'%Y-%m') as month, t.talkType talkType, COUNT(*) count
+        FROM talk t <if test="arg0 != '-1'"> INNER JOIN class_baseinfo c</if>
+        WHERE t.ttime BETWEEN #{arg1} AND #{arg2}
+        <if test="arg0 != '-1'"> AND t.classcode=c.classcode AND c.classteacherId=#{arg0}</if>
+        GROUP BY classcode,DATE_FORMAT(ttime,'%Y-%m'),talkType
+    </select>
+
+    <select id="getTalkSummaryBySection2"  resultType="com.haitong.youcai.entity.SimpleTalkSummary">
+        SELECT  t.classcode as classcode, DATE_FORMAT(t.ttime,'%Y-%m') as month, t.talkType talkType, COUNT(*) count
+        FROM talk t <if test="arg0 != '-1'"> INNER JOIN class_baseinfo c</if>
+        WHERE t.ttime BETWEEN #{arg1} AND #{arg2} AND t.result='目标达成'
+        <if test="arg0 != '-1'"> AND t.classcode=c.classcode AND c.classteacherId=#{arg0}</if>
+        GROUP BY classcode,DATE_FORMAT(ttime,'%Y-%m'),talkType
+    </select>
+
+
+    <select id="getScore_items_java"  resultType="String">
+        select psiname from process_score_items_java
+    </select>
+
+    <select id="getScore_types_java"  resultType="String">
+        select pstjname from process_score_types_java
+    </select>
+
+    <select id="getScore_items_ai"  resultType="String">
+        select psianame from process_score_items_ai
+    </select>
+
+    <select id="getScore_types_ai"  resultType="String">
+        select pstaname from process_score_types_ai
+    </select>
+
+    <insert id="createTraineeScores_batchTrainee" parameterType="java.util.List">
+        INSERT INTO process_trainee_score(code,classcode)
+        VALUES
+        <foreach collection ="list" item="baseinfoForTrainee" index="index" separator =",">
+            (#{baseinfoForTrainee.code},#{baseinfoForTrainee.classcode})
+        </foreach >
+    </insert>
+
+    <insert id="createTraineeScore" parameterType="com.haitong.youcai.entity.BaseinfoForTrainee">
+        INSERT INTO process_trainee_score(code,classcode) VALUES(#{baseinfoForTrainee.code},#{baseinfoForTrainee.classcode})
+    </insert>
+
+
+    <select id="listProcessTraineeScores"  resultType="com.haitong.youcai.entity.ProcessScoreForTrainee">
+        select * from process_trainee_score WHERE classcode=#{arg0}
+    </select>
+
+    <update id="updateScoreItem" parameterType="com.haitong.youcai.entity.Score">
+        UPDATE process_score_items SET
+        ttime=#{ttime},
+        tname=#{tname},
+        tscore=#{tscore},
+        detail=#{detail}
+        WHERE tid=#{tid}
+    </update>
+
+
+    <update id="updateScoreItem_java" >
+        UPDATE process_trainee_score SET
+
+            <if test="arg4=='质检1(数组,静态方法)'">
+                checktime_1=#{arg1},checkscore_1=#{arg2},checkdetail_1=#{arg3}
+            </if>
+
+            <if test="arg4=='质检2(oo,集合,异常)'">
+                checktime_2=#{arg1},checkscore_2=#{arg2},checkdetail_2=#{arg3}
+            </if>
+
+            <if test="arg4=='质检3(html,css,js,jquery)'">
+                checktime_3=#{arg1},checkscore_3=#{arg2},checkdetail_3=#{arg3}
+            </if>
+
+            <if test="arg4=='质检4(SSMH)'">
+                checktime_4=#{arg1},checkscore_4=#{arg2},checkdetail_4=#{arg3}
+            </if>
+
+            <if test="arg4=='se项目'">
+                pro1_time=#{arg1},pro1_score=#{arg2},pro1_detail=#{arg3}
+            </if>
+
+            <if test="arg4=='ee项目'">
+                pro2_time=#{arg1},pro2_score=#{arg2},pro2_detail=#{arg3}
+            </if>
+
+            <if test="arg4=='结业考试'">
+                graduateExam_time=#{arg1},graduateExam_score=#{arg2},graduateExam_detail=#{arg3}
+            </if>
+        WHERE code=#{arg0}
+    </update>
+
+
+    <update id="updateScoreItem_ai" >
+        UPDATE process_trainee_score SET
+
+            <if test="arg4=='质检1(数组,函数)'">
+                checktime_1=#{arg1},checkscore_1=#{arg2},checkdetail_1=#{arg3}
+            </if>
+
+            <if test="arg4=='质检2(指针和链表)'">
+                checktime_2=#{arg1},checkscore_2=#{arg2},checkdetail_2=#{arg3}
+            </if>
+
+            <if test="arg4=='质检3(c++ oo)'">
+                checktime_3=#{arg1},checkscore_3=#{arg2},checkdetail_3=#{arg3}
+            </if>
+
+            <if test="arg4=='c项目'">
+                pro1_time=#{arg1},pro1_score=#{arg2},pro1_detail=#{arg3}
+            </if>
+
+            <if test="arg4=='c++项目'">
+                pro2_time=#{arg1},pro2_score=#{arg2},pro2_detail=#{arg3}
+            </if>
+
+            <if test="arg4=='毕业项目'">
+                graduatePro_time=#{arg1},graduatePro_score=#{arg2},graduatePro_detail=#{arg3}
+            </if>
+
+            <if test="arg4=='结业考试'">
+                graduateExam_time=#{arg1},graduateExam_score=#{arg2},graduateExam_detail=#{arg3}
+            </if>
+
+
+        WHERE code=#{arg0}
+    </update>
+
+
+
+
+
+
+    <update id="updateScoreItem2_java" >
+        UPDATE process_trainee_score SET
+
+        <if test="arg3=='质检1(数组,静态方法)'">
+            checkscore_1=#{arg1},checkdetail_1=#{arg2}
+        </if>
+
+        <if test="arg3=='质检2(oo,集合,异常)'">
+            checkscore_2=#{arg1},checkdetail_2=#{arg2}
+        </if>
+
+        <if test="arg3=='质检3(html,css,js,jquery)'">
+            checkscore_3=#{arg1},checkdetail_3=#{arg2}
+        </if>
+
+        <if test="arg3=='质检4(SSMH)'">
+            checkscore_4=#{arg1},checkdetail_4=#{arg2}
+        </if>
+
+        <if test="arg3=='se项目'">
+            pro1_score=#{arg1},pro1_detail=#{arg2}
+        </if>
+
+        <if test="arg3=='ee项目'">
+            pro2_score=#{arg1},pro2_detail=#{arg2}
+        </if>
+
+        <if test="arg3=='结业考试'">
+            graduateExam_score=#{arg1},graduateExam_detail=#{arg2}
+        </if>
+        WHERE code=#{arg0}
+    </update>
+
+
+    <update id="updateScoreItem2_ai" >
+        UPDATE process_trainee_score SET
+
+        <if test="arg3=='质检1(数组,函数)'">
+            checkscore_1=#{arg1},checkdetail_1=#{arg2}
+        </if>
+
+        <if test="arg3=='质检2(指针和链表)'">
+            checkscore_2=#{arg1},checkdetail_2=#{arg2}
+        </if>
+
+        <if test="arg3=='质检3(c++ oo)'">
+            checkscore_3=#{arg1},checkdetail_3=#{arg2}
+        </if>
+
+        <if test="arg3=='c项目'">
+            pro1_score=#{arg1},pro1_detail=#{arg2}
+        </if>
+
+        <if test="arg3=='c++项目'">
+            pro2_score=#{arg1},pro2_detail=#{arg2}
+        </if>
+
+        <if test="arg3=='毕业项目'">
+            graduatePro_score=#{arg1},graduatePro_detail=#{arg2}
+        </if>
+
+        <if test="arg3=='结业考试'">
+            graduateExam_score=#{arg1},graduateExam_detail=#{arg2}
+        </if>
+
+
+        WHERE code=#{arg0}
+    </update>
+
+
+
+    <select id="getMaxAttenceDate"  resultType="String">
+        select max(datee) from process_attence_original WHERE classcode=#{arg0}
+    </select>
+
+    <insert id="saveAttenceOriginals" parameterType="java.util.List">
+        INSERT INTO process_attence_original(code,name,classcode,datee,week,timee,clickTime,clickResult,clickAddress,clickComment,clickDevice)
+        VALUES
+        <foreach collection ="list" item="processAttenceOriginal" index="index" separator =",">
+            (#{processAttenceOriginal.code},#{processAttenceOriginal.name},#{processAttenceOriginal.classcode},#{processAttenceOriginal.datee},#{processAttenceOriginal.week},#{processAttenceOriginal.timee},
+            #{processAttenceOriginal.clickTime},#{processAttenceOriginal.clickResult},#{processAttenceOriginal.clickAddress},#{processAttenceOriginal.clickComment},#{processAttenceOriginal.clickDevice}
+            )
+        </foreach >
+    </insert>
+
+
+    <insert id="saveAttenceDays" parameterType="java.util.List">
+        INSERT INTO process_attence_day(code,name,classcode,datee,week,turn,clickTime_1,clickResult_1,clickTime_2,clickResult_2,
+        attence,workTime,earlyLefts,earlyLeftTime,free_thing,free_ill,lates,lateTime,lacks_1,lacks_2,absents)
+        VALUES
+        <foreach collection ="list" item="processAttenceDay" index="index" separator =",">
+            (#{processAttenceDay.code},#{processAttenceDay.name},#{processAttenceDay.classcode},#{processAttenceDay.datee},#{processAttenceDay.week},#{processAttenceDay.turn},
+            #{processAttenceDay.clickTime_1},#{processAttenceDay.clickResult_1},#{processAttenceDay.clickTime_2},#{processAttenceDay.clickResult_2},#{processAttenceDay.attence},#{processAttenceDay.workTime},
+            #{processAttenceDay.earlyLefts},#{processAttenceDay.earlyLeftTime},#{processAttenceDay.free_thing},#{processAttenceDay.free_ill},#{processAttenceDay.lates},
+            #{processAttenceDay.lateTime},#{processAttenceDay.lacks_1},#{processAttenceDay.lacks_2},#{processAttenceDay.absents}
+            )
+        </foreach >
+    </insert>
+
+
+    <select id="getAttenceOriginals"  resultType="com.haitong.youcai.entity.ProcessAttenceOriginal">
+        select * from process_attence_original WHERE classcode=#{arg0} AND datee BETWEEN #{arg1} AND #{arg2}
+    </select>
+
+    <select id="getAttenceDays"  resultType="com.haitong.youcai.entity.ProcessAttenceDay">
+        select * from process_attence_day WHERE classcode=#{arg0} AND datee BETWEEN #{arg1} AND #{arg2}
+    </select>
+
+
+    <select id="getAttenceSummarys"  resultType="com.haitong.youcai.entity.ProcessAttenceMSummary">
+        select code,name,classcode,
+        SUM(attence) days, SUM(lates) lates,SUM(lateTime) lateTimes,SUM(earlyLefts) earlyLefts, SUM(earlyLeftTime) earlyLeftTimes,
+         SUM(lacks_1) lackClicks_1, SUM(lacks_2) lackClicks_2, SUM(absents) absentDays, SUM(free_thing) absent_things, SUM(free_ill) absent_ills
+        from process_attence_day WHERE classcode=#{arg0} AND datee LIKE CONCAT( #{arg1}, '%')
+        group by code
+    </select>
+
+    <delete id="deleteTalk" parameterType="int" >
+        DELETE FROM talk
+        WHERE tid=#{arg0}
+    </delete>
+
+
+    <select id="getClassTeacherByCid"  resultType="com.haitong.youcai.entity.ClassTeacher">
+        select ctid,ctname from classteacher WHERE centerId=#{arg0}
+        <!--<if test="arg0 > -1">WHERE centerId=#{arg0}</if>-->
+    </select>
+
+
+    <select id="getTalkCountByClasscode"  parameterType="String" resultType="com.haitong.youcai.entity.SimpleTalkCount">
+        select code,count(*) as count from talk WHERE classcode=#{arg0} group by code
+    </select>
+
+    <select id="getTalkCountByCode"  parameterType="String" resultType="com.haitong.youcai.entity.SimpleTalkCount">
+        select code, count(*) as count from talk WHERE code=#{arg0}
+    </select>
+
+
+    <select id="getTrnameByCode"  parameterType="String" resultType="String">
+        select trname from baseinfo_trainee WHERE code=#{arg0}
+    </select>
+
+
+    <select id="getTalkDetailByCode" parameterType="String" resultType="com.haitong.youcai.entity.Talk">
+        select tid, ttime, code, classcode, talkType, tcontent, learnState, result
+        from talk
+        WHERE talk.code=#{arg0}
+    </select>
+
+
+    <select id="getScoreCountByClasscode"  parameterType="String" resultType="com.haitong.youcai.entity.SimpleScoreCount">
+        select code,count(*) as count from process_score_items WHERE classcode=#{arg0} group by code
+    </select>
+
+
+    <select id="getScoreDetailByCode" parameterType="String" resultType="com.haitong.youcai.entity.Score">
+        select *
+        from process_score_items
+        WHERE code=#{arg0}
+    </select>
+
+
+
+    <select id="getScoreDetailByClasscode" parameterType="String" resultType="com.haitong.youcai.entity.Score">
+        select *
+        from process_score_items
+        WHERE classcode=#{arg0}
+    </select>
+
+    <select id="getScoreDetailByClasscode2" parameterType="String" resultType="com.haitong.youcai.entity.Score">
+        select *
+        from process_score_items
+        WHERE classcode=#{arg0}
+    </select>
+
+
+
+
+    <insert id="saveNewScore" parameterType="com.haitong.youcai.entity.Score" useGeneratedKeys="true" keyProperty="tid">
+        INSERT INTO process_score_items(code,classcode,ttime,tname,tscore,detail,did) VALUES(#{code},#{classcode},#{ttime},#{tname},#{tscore},#{detail},#{did})
+    </insert>
+
+
+    <select id="getScoreCountByCode"  parameterType="String" resultType="com.haitong.youcai.entity.SimpleScoreCount">
+        select code, count(*) as count from process_score_items WHERE code=#{arg0}
+    </select>
+
+
+
+
+    <select id="getAttenceOriginalsByName"  resultType="com.haitong.youcai.entity.ProcessAttenceOriginal">
+        select * from process_attence_original WHERE name LIKE  CONCAT('%', #{arg0}, '%')
+    </select>
+
+
+    <select id="getAttenceDaysByName"  parameterType="String" resultType="com.haitong.youcai.entity.ProcessAttenceDay">
+        select * from process_attence_day WHERE name LIKE  CONCAT('%', #{arg0}, '%')
+    </select>
+
+
+    <select id="getAttenceDaysByCode"  parameterType="String" resultType="com.haitong.youcai.entity.ProcessAttenceDay">
+        select * from process_attence_day WHERE code=#{arg0}
+    </select>
+
+
+
+    <select id="getCodeNameInAtteceDays"  parameterType="String" resultType="com.haitong.youcai.entity.KVStr">
+        select code as k,name as v from process_attence_day WHERE name LIKE  CONCAT('%', #{arg0}, '%')
+    </select>
+
+
+    <select id="getDatesByCode"  parameterType="String" resultType="String">
+        select datee from process_attence_day WHERE code= #{arg0}
+    </select>
+
+
+    <select id="getAttenceSummarysByName"  resultType="com.haitong.youcai.entity.ProcessAttenceMSummary">
+        select code,name,classcode, LEFT(datee,7) as month,
+        SUM(attence) days, SUM(lates) lates,SUM(lateTime) lateTimes,SUM(earlyLefts) earlyLefts, SUM(earlyLeftTime) earlyLeftTimes,
+        SUM(lacks_1) lackClicks_1, SUM(lacks_2) lackClicks_2, SUM(absents) absentDays, SUM(free_thing) absent_things, SUM(free_ill) absent_ills
+        from process_attence_day
+        WHERE name LIKE CONCAT('%', #{arg0}, '%')
+        group by code, LEFT(datee,7)
+    </select>
+
+
+
+    <select id="getComprehensiveScoreBaseinfoByCode"  parameterType="String" resultType="com.haitong.youcai.entity.ComprehensiveScore_baseinfo">
+        select cbt.*, bt.trname name
+        from comprehensivescore_baseinfo_trainee cbt, baseinfo_trainee bt
+        WHERE cbt.code= #{arg0} AND cbt.code=bt.code
+    </select>
+
+
+
+
+</mapper>

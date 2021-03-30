@@ -1,0 +1,847 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haitong.youcai.mapper.JiaoWuMapper">
+
+    <select id="getTeacherList" resultMap="getTeacherMap">
+        select * from teacher t, positions p, direction d
+        where t.positionId=p.pid and t.directionId=d.did
+    </select>
+
+    <select id="getTeacherList2" resultType="com.haitong.youcai.entity.Teacher">
+        select * from teacher
+    </select>
+
+    <select id="getCenterList" resultMap="getCenterMap" >
+        select * from center c , teacher t, positions p  where c.chargerId=t.tid AND t.positionId=p.pid
+    </select>
+
+    <select id="getCenterList2" resultType="com.haitong.youcai.entity.Center" >
+        select * from center
+    </select>
+
+
+    <select id="getTeacherByTid" parameterType="int" resultType="com.haitong.youcai.entity.Teacher" >
+        select * from  teacher t
+        where #{tid}=t.tid
+    </select>
+
+    <select id="getCenterByPartCName" parameterType="String" resultMap="getCenterMap" >
+        select * from center c,teacher t, positions p
+        where c.chargerId=t.tid and t.positionId=p.pid and c.cname LIKE CONCAT('%',#{arg0},'%')
+    </select>
+
+    <select id="getTeacherIdBytel" parameterType="String" resultType="int">
+        select tid from teacher where tel = #{_parameter}
+    </select>
+
+    <select id="getCenterById" parameterType="int" resultMap="getCenterMap">
+        select * from center c,teacher t, positions p
+        where c.chargerId=t.tid and t.positionId=p.pid and cid=#{arg0}
+    </select>
+
+    <select id="getCenterById2" parameterType="int" resultType="com.haitong.youcai.entity.Center">
+        select * from center c where cid=#{arg0}
+    </select>
+
+    <insert id="insertNewCenter">
+        insert into center(cname, address, chargerId, createTime) values(#{arg0},#{arg1},#{arg2},#{arg3})
+    </insert>
+
+    <update id="updateCenter">
+        update center set cname=#{arg1},address=#{arg2},chargerId=#{arg3} where cid = #{arg0}
+    </update>
+
+    <delete id="deleteCenter" parameterType="int">
+        delete from center where cid = #{cid}
+    </delete>
+
+
+    <resultMap type="com.haitong.youcai.entity.Center" id="getCenterMap">
+        <id column="cid" property="cid"/>
+        <result column="cname" property="cname"/>
+        <result column="address" property="address"/>
+        <result column="thumb" property="thumb"/>
+        <result column="createTime" property="createTime"/>
+
+        <association property="charger" javaType="com.haitong.youcai.entity.Teacher">
+            <id column="tid" property="tid"></id>
+            <result column="tname" property="tname"/>
+            <result column="gender" property="gender"/>
+            <result column="age" property="age"/>
+            <result column="profession" property="profession"/>
+            <result column="school" property="school"/>
+            <result column="diploma" property="diploma"/>
+            <result column="graduateDate" property="graduateDate"/>
+            <result column="experience" property="experience"/>
+            <result column="email" property="email"/>
+            <result column="tel" property="tel"/>
+            <result column="hireDate" property="hireDate"/>
+            <result column="leaveDate" property="leaveDate"/>
+            <result column="leaveReason" property="leaveReason"/>
+            <result column="state" property="state"/>
+
+            <association property="position" javaType="com.haitong.youcai.entity.Position">
+                <id column="pid" property="pid"></id>
+                <result column="pname" property="pname"/>
+                <result column="salary" property="salary"/>
+                <result column="createTime" property="createTime"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <resultMap type="com.haitong.youcai.entity.Teacher" id="getTeacherMap">
+        <id column="tid" property="tid"></id>
+        <result column="tname" property="tname"/>
+        <result column="gender" property="gender"/>
+        <result column="age" property="age"/>
+        <result column="profession" property="profession"/>
+        <result column="school" property="school"/>
+        <result column="diploma" property="diploma"/>
+        <result column="graduateDate" property="graduateDate"/>
+        <result column="experience" property="experience"/>
+        <result column="email" property="email"/>
+        <result column="tel" property="tel"/>
+        <result column="hireDate" property="hireDate"/>
+        <result column="leaveDate" property="leaveDate"/>
+        <result column="leaveReason" property="leaveReason"/>
+        <result column="state" property="state"/>
+
+        <association property="position" javaType="com.haitong.youcai.entity.Position">
+            <id column="pid" property="pid"></id>
+            <result column="pname" property="pname"/>
+            <result column="salary" property="salary"/>
+            <result column="createTime" property="createTime"/>
+        </association>
+
+        <association property="direction" javaType="com.haitong.youcai.entity.Direction">
+            <id column="did" property="did"></id>
+            <result column="dname" property="dname"/>
+        </association>
+
+    </resultMap>
+
+
+
+    <select id="getDirectionByPartDName" resultMap="getDirectionMap">
+        select * from direction d,teacher t, positions p
+        where d.chargerId=t.tid and t.positionId=p.pid and d.dname LIKE CONCAT('%',#{arg0},'%')
+    </select>
+
+    <select id="getDirectionInfo" resultMap="getDirectionMap">
+        select * from direction d,teacher t, positions p
+        where d.chargerId=t.tid and t.positionId=p.pid
+    </select>
+
+    <select id="getDirectionInfo2" resultMap="getSimpleDirectionMap">
+        select * from direction
+    </select>
+
+    <insert id="insertNewDirection">
+        insert into direction(dname, describee, chargerId, createTime) values(#{arg0},#{arg1},#{arg2},#{arg3})
+    </insert>
+
+    <insert id="insertNewDirection2">
+        insert into direction(dname, describee, createTime) values(#{arg0},#{arg1},#{arg2})
+    </insert>
+
+    <update id="updateDirection">
+        update direction set dname=#{arg1},describee=#{arg2}<if test="#{arg3} != null">,chargerId=#{arg3}</if>  where did = #{arg0}
+    </update>
+
+    <delete id="deleteDirection" parameterType="int">
+        delete from direction where did = #{did}
+    </delete>
+
+    <select id="getDirectionList" resultMap="getDirectionMap">
+        select * from direction d,teacher t, positions p
+        where d.chargerId=t.tid and t.positionId=p.pid
+    </select>
+
+    <select id="getDirectionById" parameterType="int" resultMap="getDirectionMap">
+        select * from direction d,teacher t, positions p
+        where d.chargerId=t.tid and t.positionId=p.pid and did=#{arg0}
+    </select>
+
+    <select id="getDirectionById2" parameterType="int" resultMap="getSimpleDirectionMap">
+        select * from direction
+        where did=#{arg0}
+    </select>
+
+    <resultMap type="com.haitong.youcai.entity.Direction" id="getSimpleDirectionMap">
+        <id column="did" property="did"/>
+        <result column="dname" property="dname"/>
+        <result column="describee" property="describe"/>
+        <result column="chargerId" property="chargerId"/>
+        <result column="createTime" property="createTime"/>
+        <result column="thumb" property="thumb"/>
+    </resultMap>
+
+    <resultMap type="com.haitong.youcai.entity.Direction" id="getDirectionMap">
+        <id column="did" property="did"/>
+        <result column="dname" property="dname"/>
+        <result column="describee" property="describe"/>
+        <result column="createTime" property="createTime"/>
+
+        <association property="charger" javaType="com.haitong.youcai.entity.Teacher">
+            <id column="tid" property="tid"></id>
+            <result column="tname" property="tname"/>
+            <result column="profession" property="profession"/>
+            <result column="school" property="school"/>
+            <result column="diploma" property="diploma"/>
+            <result column="experience" property="experience"/>
+            <result column="email" property="email"/>
+            <result column="tel" property="tel"/>
+            <result column="hireDate" property="hireDate"/>
+            <result column="leaveDate" property="leaveDate"/>
+            <result column="leaveReason" property="leaveReason"/>
+            <result column="state" property="state"/>
+
+            <association property="position" javaType="com.haitong.youcai.entity.Position">
+                <id column="pid" property="pid"></id>
+                <result column="pname" property="pname"/>
+                <result column="salary" property="salary"/>
+                <result column="createTime" property="createTime"/>
+            </association>
+        </association>
+    </resultMap>
+
+
+    <select id="getClassTeacherList" resultMap="getClassTeacherMap">
+        select * from classteacher ct,center c
+        where ct.centerId=c.cid
+    </select>
+
+    <insert id="insertBeforeClassTeacher" keyProperty="ctid" useGeneratedKeys="true" parameterType="com.haitong.youcai.entity.ClassTeacher">
+        insert into classteacher(ctname) values(#{ctname})
+    </insert>
+
+    <insert id="insertNewClassTeacher">
+        insert into classteacher(ctname, gender, phone, email, centerId, hiredate) values(#{arg0},#{arg1},#{arg2},#{arg3},#{arg4},#{arg5})
+    </insert>
+
+    <!--int updateClassteacher(int ctid, String ctname, String tel, String email, String leavedate, String leaveReason, String centerId, String state, String gender);-->
+    <update id="updateClassteacher">
+        update classteacher set ctname=#{arg1},phone=#{arg2},email=#{arg3},leavedate=#{arg4}, leaveReason=#{arg5}, centerId=#{arg6}, state=#{arg7}, gender=#{arg8} where ctid = #{arg0}
+    </update>
+
+    <resultMap type="com.haitong.youcai.entity.ClassTeacher" id="getClassTeacherMap">
+        <id column="ctid" property="ctid"/>
+        <result column="ctname" property="ctname"/>
+        <result column="gender" property="gender"/>
+        <result column="phone" property="tel"/>
+        <result column="email" property="email"/>
+        <result column="hiredate" property="hiredate"/>
+        <result column="leavedate" property="leavedate"/>
+        <result column="leaveReason" property="leaveReason"/>
+        <result column="state" property="state"/>
+
+
+        <association property="center" javaType="com.haitong.youcai.entity.Center">
+            <id column="cid" property="cid"></id>
+            <result column="cname" property="cname"/>
+            <result column="address" property="address"/>
+            <result column="createTime" property="createTime"/>
+
+        </association>
+    </resultMap>
+
+
+
+    <select id="getPositionList" resultType="com.haitong.youcai.entity.Position">
+        select * from positions
+    </select>
+
+
+    <insert id="insertNewTeacher" parameterType="com.haitong.youcai.entity.Teacher_t">
+        insert into teacher(tname, gender, age, directionId, positionId, profession, school, diploma, graduateDate, experience, tel, email, hiredate,state)
+         values(#{tname},#{gender},#{age},#{directionId},#{positionId},#{profession}, #{school}, #{diploma}, #{graduateDate},#{experience},#{tel},#{email},#{hireDate},#{state})
+    </insert>
+
+    <update id="updateTeacher" parameterType="com.haitong.youcai.entity.Teacher_t">
+        update teacher
+        <set>
+            tname=#{tname},gender=#{gender},age=#{age},directionId=#{directionId},positionId=#{directionId},profession=#{profession},
+            school=#{school},diploma=#{diploma},experience=#{experience},tel=#{tel},email=#{email},state=#{state},
+            <if test="graduateDate != null and graduateDate != ''">
+                graduateDate=#{graduateDate},
+            </if>
+            <if test="hireDate != null and hireDate != ''">
+                hiredate=#{hireDate},
+            </if>
+            <if test="leaveReason != null and leaveReason != ''">
+                leavereason=#{leaveReason}
+            </if>
+        </set>
+        <where>
+            tid=#{tid}
+        </where>
+    </update>
+
+
+
+    <select id="getChaptersByCid" parameterType="int" resultType="com.haitong.youcai.entity.Chapter">
+        select * from chapter where courseId=#{cid}
+    </select>
+
+    <select id="getCourseList" resultMap="getCourseMap">
+        select * from course c, direction d, chapter cp
+        where c.directionId=d.did and c.cid=cp.courseId
+    </select>
+
+    <insert id="insertNewCourse" parameterType="com.haitong.youcai.entity.Course_t">
+        insert into course(cname, cdescribe, createTime, directionId) values(#{cname},#{describe},#{createTime},#{directionId})
+    </insert>
+
+    <select id="getCourseId" resultType="int">
+        select cid from course where directionId=#{arg0} and cname=#{arg1}
+    </select>
+
+    <select id="getCourseIdByDirectionId" resultType="int">
+        select cid from course where directionId=#{arg0}
+    </select>
+
+
+    <insert id="insertChapters">
+        INSERT INTO chapter(cpname, cpdescribe, courseId, posInCourse,period)
+        VALUES
+        <foreach collection ="list" item="chapter" index="index" separator =",">
+            (#{chapter.cpname}, #{chapter.cpdescribe}, #{chapter.courseId},#{chapter.posInCourse},#{chapter.period})
+        </foreach >
+    </insert>
+
+    <resultMap type="com.haitong.youcai.entity.Course" id="getCourseMap">
+        <id column="cid" property="cid"/>
+        <result column="cname" property="cname"/>
+        <result column="cdescribe" property="describe"/>
+        <result column="createTime" property="createTime"/>
+
+        <association property="direction" javaType="com.haitong.youcai.entity.Direction">
+            <id column="did" property="did"/>
+            <result column="dname" property="dname"/>
+            <result column="describee" property="describe"/>
+            <result column="createTime" property="createTime"/>
+        </association>
+
+        <collection  property="chapters" ofType="com.haitong.youcai.entity.Chapter">
+            <id column="cpid" property="cpid"/>
+            <result column="cpname" property="cpname"/>
+            <result column="cpdescribe" property="cpdescribe"/>
+            <result column="courseId" property="courseId"/>
+            <result column="posInCourse" property="posInCourse"/>
+            <result column="period" property="period"/>
+        </collection >
+
+
+    </resultMap>
+
+
+    <select id="getXuejiUpdateTypes" resultType="String">
+        select xutname from xueji_update_type
+    </select>
+
+
+    <select id="getXuejiInfoByClassCode" parameterType="String" resultType="com.haitong.youcai.entity.BaseinfoForTrainee">
+        select code,trname name from baseinfo_trainee WHERE classcode=#{arg0}
+    </select>
+
+    <insert id="saveXuejiInfo" parameterType="com.haitong.youcai.entity.Xueji" keyProperty="id" useGeneratedKeys="true">
+        insert into xueji(code, classcode, typee, content, reason, result, timee,imgProof,targetClasscode)
+        values(#{code},#{classcode},#{type},#{content},#{reason},#{result}, #{timee},#{imgProof},#{targetClasscode})
+    </insert>
+
+    <update id="updateXuejiInfo" parameterType="com.haitong.youcai.entity.Xueji">
+        UPDATE xueji SET
+         code=#{code},typee=#{type},content=#{content},reason=#{reason},result=#{result},imgProof=#{imgProof},targetClasscode=#{targetClasscode}
+         <if test="classcode != null and classcode != '' ">,classcode=#{classcode}</if>
+         <if test="timee != null and timee != '' ">,timee=#{timee}</if>
+         WHERE id=#{id}
+    </update>
+
+    <select id="getXuejiDetail" parameterType="String" resultType="com.haitong.youcai.entity.Xueji">
+        select xj.id id, xj.code code, xj.classcode classcode,xj.typee type, xj.content content, xj.reason reason, xj.result result, xj.timee timee,xj.imgProof imgProof, xj.targetClasscode targetClasscode, bt.trname name
+        from xueji xj,baseinfo_trainee bt
+        WHERE xj.classcode=#{arg0} AND bt.classcode=#{arg0} AND xj.code=bt.code
+    </select>
+
+    <select id="getSwitchXuejiDetail" parameterType="String" resultType="com.haitong.youcai.entity.Xueji">
+        SELECT xj.id id, xj.code CODE, xj.classcode classcode,xj.typee TYPE, xj.content content, xj.reason reason, xj.result result, xj.timee timee,xj.imgProof imgProof, xj.targetClasscode targetClasscode, bt.trname NAME
+        FROM xueji xj,  baseinfo_trainee bt
+        WHERE xj.targetClasscode=bt.classcode AND xj.code=bt.code  AND xj.classcode= #{arg0} AND (xj.typee="重修" OR xj.typee='转班')
+    </select>
+
+
+
+    <select id="getXuejiByName" parameterType="String" resultType="com.haitong.youcai.entity.Xueji">
+        select xj.id id, xj.code code, xj.classcode classcode,xj.typee type, xj.content content, xj.reason reason, xj.result result, xj.timee timee,xj.imgProof imgProof, xj.targetClasscode targetClasscode, bt.trname name
+        from xueji xj,baseinfo_trainee bt
+        WHERE  bt.trname LIKE CONCAT('%',#{arg0},'%')  AND xj.code=bt.code
+    </select>
+
+    <select id="getCenterByCenterId" parameterType="int" resultType="com.haitong.youcai.entity.Center">
+        select * from center WHERE cid=#{arg0}
+    </select>
+
+    <select id="getDirectionByDirectionId" parameterType="int" resultType="com.haitong.youcai.entity.Direction">
+        select * from direction WHERE did=#{arg0}
+    </select>
+
+    <select id="getXuejiById" parameterType="int" resultType="com.haitong.youcai.entity.Xueji">
+        select * from xueji WHERE id=#{arg0}
+    </select>
+
+    <insert id="createXueji" parameterType="com.haitong.youcai.entity.Xueji" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO xueji(imgProof) VALUES(#{imgProof})
+    </insert>
+
+
+    <update id="updateXuejiImage" >
+        UPDATE xueji SET
+        imgProof=#{arg1}
+        WHERE id=#{arg0}
+    </update>
+
+
+    <select id="getImgProofById" parameterType="int" resultType="String">
+        select imgProof from xueji WHERE id=#{arg0}
+    </select>
+
+
+    <update id="updateCourse" parameterType="com.haitong.youcai.entity.Course_t">
+        UPDATE course SET
+        cname=#{cname},cdescribe=#{describe},directionId=#{directionId}
+        WHERE cid=#{cid}
+    </update>
+
+
+    <update id="updateChapters"  parameterType="java.util.List">
+        <foreach collection="list" item="chapter" index="index" open="" close="" separator=";">
+            update chapter
+            <set>
+                cpname=#{chapter.cpname},
+                cpdescribe=#{chapter.cpdescribe},
+                period=#{chapter.period}
+            </set>
+            where cpid = #{chapter.cpid}
+        </foreach>
+    </update>
+
+
+    <select id="getTeacherByCondition" resultMap="getTeacherMap">
+        select * from teacher t, positions p, direction d
+        where t.positionId=p.pid and t.directionId=d.did AND hiredate BETWEEN #{arg0} AND #{arg1}
+        <if test="arg2 != -1">AND t.positionId=#{arg2}</if>
+        <if test="arg3 != -1">AND t.tid=#{arg3}</if>
+    </select>
+
+
+    <select id="getClassTeachersByCondition" resultMap="getClassTeacherMap">
+        select * from classteacher ct,center c
+        where ct.centerId=c.cid AND hireDate BETWEEN #{arg0} AND #{arg1}
+        <if test="arg2 != -1"> AND centerId=#{arg2}</if>
+        <if test="arg3 != -1"> AND ctid=#{arg3}</if>
+    </select>
+
+
+    <!-- 休学复学-->
+    <select id="getXiuxueFuXue_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select xj.classcode k, count(*) v
+        from xueji xj
+        <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
+        WHERE typee='休学复学'
+        AND timee BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+
+    <!-- 重修入班-->
+    <select id="getChongxiuRuban_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select xj.targetClasscode k,count(*) v
+        from xueji xj
+        <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
+        WHERE xj.typee='重修'
+        AND xj.timee BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.targetClasscode
+    </select>
+
+    <!-- 转入本班-->
+    <select id="getZhuanruBenban_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select xj.targetClasscode k,count(*) v
+        from xueji xj
+        <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
+        WHERE xj.typee='转班'
+        AND timee BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.targetClasscode
+    </select>
+
+    <!-- 转去别班-->
+    <select id="getZhuanquBieban_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select xj.classcode k,count(*) v
+        from xueji xj
+        <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
+        WHERE xj.typee='转班'
+        AND xj.timee BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+    <!-- 重修离班-->
+    <select id="getChongxiuLiban_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select xj.classcode k,count(*) v
+        from xueji xj
+        <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
+        WHERE xj.typee='重修'
+        AND timee BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+
+    <!-- 休学离班-->
+    <select id="getXiuxueLiban_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select xj.classcode k,count(*) v
+        from xueji xj
+        <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
+        WHERE xj.typee='休学I' OR typee='休学II'
+        AND timee BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+
+    <!-- 自主择业-->
+    <select id="getZizhuZeye_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select xj.classcode k,count(*) v
+        from xueji xj
+        <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
+        WHERE xj.typee='过程中自主择业-理论课结束' OR typee='过程中自主择业-理论课未结束' OR typee='就业期自主择业-已就业'
+        AND xj.timee BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+
+    <!-- 退费人数-->
+    <select id="getTuifeiRenshu_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select xj.classcode k,count(*) v
+        from xueji xj
+        <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
+        WHERE xj.typee='退费'
+        AND xj.timee BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+
+    <!-- 失联人数-->
+    <select id="getShilianRenshu_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select xj.classcode k,count(*) v
+        from xueji xj
+        <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
+        WHERE xj.typee='失联'
+        AND xj.timee BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+
+    <!-- 退学人数-->
+    <select id="getTuixueRenshu_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select xj.classcode k,count(*) v
+        from xueji xj
+        <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
+        WHERE xj.typee='退学'
+        AND xj.timee BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+
+
+
+
+    <!-- 未满3个月自主择业-->
+    <select id="getZizhuZeyeForNot3_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select xj.classcode k, count(*) v
+        from xueji xj INNER JOIN class_baseinfo cb
+        WHERE xj.typee='过程中自主择业-理论课未结束'
+        AND xj.classcode=cb.classcode
+        AND xj.timee BETWEEN #{startTime} AND #{endTime}
+        AND (
+        ((xj.classcode LIKE '%q%') AND (DATEDIFF(xj.timee,cb.beginDate) &lt; 90)) OR
+        ((xj.classcode LIKE '%z%') AND (DATEDIFF(xj.timee,cb.beginDate) &lt; 135))
+        )
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+
+
+    <!--  未满3个月退费人数   提交学籍变更时间 - 所在班级的开班时间 就是具体学习时间。全日制<90  周末<135-->
+    <select id="getTuifeiRenshuForNot3_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        SELECT xj.classcode k, count(*) v
+        FROM xueji xj INNER JOIN class_baseinfo cb
+        WHERE xj.classcode= cb.classcode
+        AND xj.typee='退费'
+        AND xj.timee BETWEEN #{startTime} AND #{endTime}
+        AND (
+        ((xj.classcode LIKE '%q%') AND (DATEDIFF(xj.timee,cb.beginDate) &lt; 90)) OR
+        ((xj.classcode LIKE '%z%') AND (DATEDIFF(xj.timee,cb.beginDate) &lt; 135))
+        )
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+
+
+    <!--未满三个月的失联人数-->
+    <select id="getShilianRenshuForNot3_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        SELECT xj.classcode k, count(*) v
+        FROM xueji xj INNER JOIN class_baseinfo cb
+        WHERE xj.classcode= cb.classcode
+        AND xj.typee='失联'
+        AND xj.timee BETWEEN #{startTime} AND #{endTime}
+        AND (
+        ((xj.classcode LIKE '%q%') AND (DATEDIFF(xj.timee,cb.beginDate) &lt; 90)) OR
+        ((xj.classcode LIKE '%z%') AND (DATEDIFF(xj.timee,cb.beginDate) &lt; 135))
+        )
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+
+
+    <!--未满三个月的休学不复学-->
+    <select id="getXiuxuebufuxueForNot3_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        SELECT xj.classcode k, count(*) v
+        FROM xueji xj INNER JOIN class_baseinfo cb
+        WHERE xj.classcode= cb.classcode
+        AND xj.typee='放弃学业'
+        AND xj.timee BETWEEN #{startTime} AND #{endTime}
+        AND (
+        ((xj.classcode LIKE '%q%') AND (DATEDIFF(xj.timee,cb.beginDate) &lt; 90)) OR
+        ((xj.classcode LIKE '%z%') AND (DATEDIFF(xj.timee,cb.beginDate) &lt; 135))
+        )
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+
+    <!--未满三个月的退学人数-->
+    <select id="getTuixueRenshuForNot3_XuejiSummary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        SELECT xj.classcode k, count(*) v
+        FROM xueji xj INNER JOIN class_baseinfo cb
+        WHERE xj.classcode= cb.classcode
+        AND xj.typee='退学'
+        AND xj.timee BETWEEN #{startTime} AND #{endTime}
+        AND (
+        ((xj.classcode LIKE '%q%') AND (DATEDIFF(xj.timee,cb.beginDate) &lt; 90)) OR
+        ((xj.classcode LIKE '%z%') AND (DATEDIFF(xj.timee,cb.beginDate) &lt; 135))
+        )
+
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+
+
+
+
+    <!--结班人数-->
+    <select id="getJiebanRenshu_Summary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select bt.classcode k,count(*) v
+        from baseinfo_trainee bt  INNER JOIN class_baseinfo cb
+        WHERE bt.classcode=cb.classcode
+        AND cb.beginDate BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND bt.classcode=#{classcode}</if>
+        GROUP BY bt.classcode
+    </select>
+
+
+    <!--每个班开班时人数，  和上面结合可计算班级流失率-->
+    <select id="getKaibanRenshu_Summary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select classcode k,initPfx v
+        from class_baseinfo
+        WHERE beginDate BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1">AND centerId=#{centerId}</if>
+        <if test="ctid != -1">AND classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND classcode=#{classcode}</if>
+    </select>
+
+
+    <!--推迟就业-->
+    <select id="getTuichiJiuye_Summary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select xj.classcode k,count(*) v
+        from xueji xj
+        <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
+        WHERE xj.typee='推迟就业'
+        AND timee BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1 or ctid != -1" >AND xj.classcode=cb.classcode</if>
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
+        GROUP BY xj.classcode
+    </select>
+
+    <!--班级包就业人数-->
+    <select id="getJinrujiuyeRenshu_Summary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select bt.classcode k,COUNT(DISTINCT(bt.code)) v
+        from baseinfo_trainee bt INNER JOIN class_baseinfo cb
+        WHERE bt.classcode=cb.classcode
+        AND bt.diploma='大专' OR bt.diploma='本科' OR bt.diploma='硕士' OR bt.diploma='博士'
+        AND cb.beginDate BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND bt.classcode=#{classcode}</if>
+        GROUP BY bt.classcode
+    </select>
+
+
+    <!--已就业人数-->
+    <select id="getYijiuyeRenshu_Summary" parameterType="com.haitong.youcai.entity.XuejiCondition" resultType="com.haitong.youcai.entity.KV">
+        select cb.classcode k, count(*) v
+        from employinfo_trainee et INNER JOIN class_baseinfo cb INNER JOIN baseinfo_trainee bt
+        WHERE et.employ_time != NULL AND et.employ_time != ''
+        AND et.code=bt.code AND bt.classcode=cb.classcode
+        AND cb.beginDate BETWEEN #{startTime} AND #{endTime}
+        <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
+        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="classcode != '-1'">AND cb.classcode=#{classcode}</if>
+        GROUP BY cb.classcode
+    </select>
+
+
+
+    <insert id="insertNewCenter2">
+        insert into center(cname, address, createTime) values(#{arg0},#{arg1},#{arg2})
+    </insert>
+
+
+    <update id="updateTraineeState">
+        UPDATE baseinfo_trainee SET
+        state=#{arg1}
+        WHERE code=#{arg0}
+    </update>
+
+
+    <update id="updateTraineeClasscode">
+        UPDATE baseinfo_trainee SET
+        classcode=#{arg1}
+        WHERE code=#{arg0}
+    </update>
+
+    <update id="updateScoreClasscode">
+        UPDATE process_score_items SET
+        classcode=#{arg1}
+        WHERE code=#{arg0}
+    </update>
+
+    <update id="updateInterviewClasscode">
+        UPDATE process_employ_interview SET
+        classcode=#{arg1}
+        WHERE code=#{arg0}
+    </update>
+
+
+    <insert id="saveSwitchTo" parameterType="com.haitong.youcai.entity.Xueji" keyProperty="id" useGeneratedKeys="true">
+        insert into xueji(code, classcode, typee, content, reason, result, timee,imgProof,targetClasscode)
+        values(#{code},#{targetClasscode},"转入",#{content},#{reason},#{result}, #{timee},#{imgProof},#{targetClasscode})
+    </insert>
+
+
+
+    <select id="getXuejiDetailFromCenterId" parameterType="int" resultType="com.haitong.youcai.entity.Xueji">
+        select xj.id id, xj.code code, xj.classcode classcode,xj.typee type, xj.content content, xj.reason reason, xj.result result, xj.timee timee,xj.imgProof imgProof, xj.targetClasscode targetClasscode, bt.trname name
+        from xueji xj,baseinfo_trainee bt,class_baseinfo cb
+        WHERE
+        <if test="centerId != -1">cb.centerId=#{centerId} AND </if>
+        xj.classcode=cb.classcode AND bt.classcode=cb.classcode AND xj.code=bt.code
+    </select>
+
+    <select id="getSwitchXuejiDetailFromCenterId" parameterType="int" resultType="com.haitong.youcai.entity.Xueji">
+        SELECT xj.id id, xj.code CODE, xj.classcode classcode,xj.typee TYPE, xj.content content, xj.reason reason, xj.result result, xj.timee timee,xj.imgProof imgProof, xj.targetClasscode targetClasscode, bt.trname NAME
+        FROM xueji xj,  baseinfo_trainee bt,class_baseinfo cb
+        WHERE
+        <if test="centerId != -1">cb.centerId=#{centerId} AND </if>
+        xj.targetClasscode=bt.classcode AND xj.code=bt.code  AND xj.classcode=cb.classcode AND (xj.typee="重修" OR xj.typee='转班')
+    </select>
+
+    <select id="getXuejiDetailFromDirectionId" parameterType="int" resultType="com.haitong.youcai.entity.Xueji">
+        select xj.id id, xj.code code, xj.classcode classcode,xj.typee type, xj.content content, xj.reason reason, xj.result result, xj.timee timee,xj.imgProof imgProof, xj.targetClasscode targetClasscode, bt.trname name
+        from xueji xj,baseinfo_trainee bt,class_baseinfo cb
+        WHERE
+        <if test="directionId != -1">cb.directionId=#{directionId} AND </if>
+         xj.classcode=cb.classcode AND bt.classcode=cb.classcode AND xj.code=bt.code
+    </select>
+
+    <select id="getSwitchXuejiDetailFromDirectionId" parameterType="int" resultType="com.haitong.youcai.entity.Xueji">
+        SELECT xj.id id, xj.code CODE, xj.classcode classcode,xj.typee TYPE, xj.content content, xj.reason reason, xj.result result, xj.timee timee,xj.imgProof imgProof, xj.targetClasscode targetClasscode, bt.trname NAME
+        FROM xueji xj,  baseinfo_trainee bt,class_baseinfo cb
+        WHERE
+        <if test="directionId != -1">cb.directionId=#{directionId} AND </if>
+        xj.targetClasscode=bt.classcode AND xj.code=bt.code  AND xj.classcode=cb.classcode AND (xj.typee="重修" OR xj.typee='转班')
+    </select>
+
+    <select id="getXuejiDetailFromClassteacherId" parameterType="int" resultType="com.haitong.youcai.entity.Xueji">
+        select xj.id id, xj.code code, xj.classcode classcode,xj.typee type, xj.content content, xj.reason reason, xj.result result, xj.timee timee,xj.imgProof imgProof, xj.targetClasscode targetClasscode, bt.trname name
+        from xueji xj,baseinfo_trainee bt,class_baseinfo cb
+        WHERE
+        <if test="classteacherId != -1">cb.classteacherId=#{classteacherId} AND </if>
+        xj.classcode=cb.classcode AND bt.classcode=cb.classcode AND xj.code=bt.code
+    </select>
+
+    <select id="getSwitchXuejiDetailFromClassteacherId" parameterType="int" resultType="com.haitong.youcai.entity.Xueji">
+        SELECT xj.id id, xj.code CODE, xj.classcode classcode,xj.typee TYPE, xj.content content, xj.reason reason, xj.result result, xj.timee timee,xj.imgProof imgProof, xj.targetClasscode targetClasscode, bt.trname NAME
+        FROM xueji xj,  baseinfo_trainee bt,class_baseinfo cb
+        WHERE <if test="classteacherId != -1">cb.classteacherId=#{classteacherId} AND </if>
+        xj.targetClasscode=bt.classcode AND xj.code=bt.code  AND xj.classcode=cb.classcode AND (xj.typee="重修" OR xj.typee='转班')
+    </select>
+
+
+    <select id="getTeacherListForBetweenTime" resultType="com.haitong.youcai.entity.Teacher">
+        select * from teacher
+        WHERE hiredate BETWEEN #{startTime} AND #{endTime}
+    </select>
+
+
+
+    <select id="getDirectionInfoForBetweenTime" resultType="com.haitong.youcai.entity.Direction">
+        select * from direction
+        WHERE createTime BETWEEN #{startTime} AND #{endTime}
+    </select>
+
+
+</mapper>

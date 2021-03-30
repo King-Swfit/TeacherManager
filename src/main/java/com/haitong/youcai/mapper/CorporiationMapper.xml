@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haitong.youcai.mapper.CorporiationMapper">
+    <select id="getSimpleCorporiationInfos" resultType="com.haitong.youcai.entity.Corporiation">
+        SELECT cid,cname FROM corporiation
+    </select>
+    <select id="getSimpleCorporiationsByCtid" resultType="com.haitong.youcai.entity.Corporiation">
+        SELECT cid,cname FROM corporiation
+        WHERE masterid=#{arg0}
+    </select>
+
+    <select id="getCorporiationsByCtid" resultType="com.haitong.youcai.entity.Corporiation">
+        SELECT * FROM corporiation
+        WHERE masterid=#{arg0}
+    </select>
+
+
+    <select id="getCorporiationByCid" resultType="com.haitong.youcai.entity.Corporiation">
+        SELECT * FROM corporiation WHERE cid=#{arg0}
+    </select>
+
+
+    <insert id="saveNewCorporiation" parameterType="com.haitong.youcai.entity.Corporiation" useGeneratedKeys="true" keyProperty="cid">
+        insert into corporiation(cname, caddress, contectName,contactPosition,hrmanager,tel,phone,qq,weichat,isQiyeQQ,isEnroll,describee,timee,tid,masterid)
+        values(#{cname},#{caddress},#{contectName},#{contactPosition},#{hrmanager},#{tel},#{phone},#{qq},#{weichat},#{isQiyeQQ},#{isEnroll},#{describee},#{timee},#{tid},#{tid})
+    </insert>
+
+    <insert id="saveNewCorporiation2" parameterType="com.haitong.youcai.entity.Corporiation" useGeneratedKeys="true" keyProperty="cid">
+        insert into corporiation(cname, caddress, contectName,contactPosition,hrmanager,tel,phone,qq,weichat,isQiyeQQ,isEnroll,describee,timee,tid)
+        values(#{cname},#{caddress},#{contectName},#{contactPosition},#{hrmanager},#{tel},#{phone},#{qq},#{weichat},#{isQiyeQQ},#{isEnroll},#{describee},#{timee},#{tid})
+    </insert>
+
+
+    <select id="listCorporiationBseInos" resultType="com.haitong.youcai.entity.Corporiation">
+        SELECT
+        co.cid cid,co.cname cname,co.caddress caddress, co.contectName contectName,co.contactPosition contactPosition,co.hrmanager hrmanager,
+        co.tel tel,co.phone phone,co.qq qq,co.weichat weichat,co.isQiyeQQ isQiyeQQ, co.isEnroll isEnroll, co.stuNumbers stuNumbers, co.yearStuNumbers yearStuNumbers,
+        co.describee AS describee,co.timee AS timee,co.tid AS tid, cl.ctname AS tname
+        FROM corporiation co, classteacher cl
+        WHERE co.tid=cl.ctid AND co.stuNumbers >=#{arg0} AND co.timee BETWEEN #{arg2} AND #{arg3}
+        <if test="arg1 != '全部' ">AND co.isEnroll=#{arg1}</if>
+    </select>
+
+
+    <select id="listCorporiationsByName" parameterType="string" resultType="com.haitong.youcai.entity.Corporiation">
+        SELECT
+        co.cid cid,co.cname cname,co.caddress caddress, co.contectName contectName,co.contactPosition contactPosition,co.hrmanager hrmanager,
+        co.tel tel,co.phone phone,co.qq qq,co.weichat weichat,co.isQiyeQQ isQiyeQQ, co.isEnroll isEnroll, co.stuNumbers stuNumbers, co.yearStuNumbers yearStuNumbers,
+        co.describee describee,co.timee timee,co.tid tid, cl.ctname tname
+        FROM corporiation co, classteacher cl
+        WHERE co.tid=cl.ctid AND co.cname LIKE CONCAT('%', #{arg0}, '%')
+
+    </select>
+
+
+    <update id="updateCorporiationInfo" parameterType="com.haitong.youcai.entity.Corporiation">
+        UPDATE corporiation SET
+        cname=#{cname},caddress=#{caddress},describee=#{describee},contectName=#{contectName},contactPosition=#{contactPosition},
+        hrmanager=#{hrmanager},tel=#{tel},phone=#{phone},qq=#{qq},weichat=#{weichat},isQiyeQQ=#{isQiyeQQ},isEnroll=#{isEnroll}
+        WHERE cid=#{cid}
+    </update>
+
+
+    <update id="updateAddConnectionInfo" parameterType="com.haitong.youcai.entity.Corporiation">
+        UPDATE corporiation SET
+        contectName=#{contectName},contactPosition=#{contactPosition},
+        hrmanager=#{hrmanager},tel=#{tel},phone=#{phone},qq=#{qq},weichat=#{weichat}
+        WHERE cid=#{cid}
+    </update>
+
+
+    <update id="updateConnectRecord" parameterType="com.haitong.youcai.entity.CorporiationConnectRecoed">
+        UPDATE corporiationconnectrecoeds SET
+        contectName=#{contectName},contactPosition=#{contactPosition},hrmanager=#{hrmanager},tel=#{tel},phone=#{phone},
+        qq=#{qq},weihcat=#{weichat},diploma=#{diploma},job=#{job},requiree=#{requiree},salary_1=#{salary_1},
+        salary_2=#{salary_2},shiyongqi=#{shiyongqi},shixi=#{shixi},fuli=#{fuli},isQiyeQQ=#{isQiyeQQ}
+        WHERE ccrid=#{ccrid}
+    </update>
+
+
+    <insert id="saveNewConnectRecord" parameterType="com.haitong.youcai.entity.CorporiationConnectRecoed" useGeneratedKeys="true" keyProperty="ccrid">
+        insert into corporiationconnectrecoeds(
+        centerId, classteacherId, corporiationId,contectName,contactPosition,hrmanager, tel,phone,qq,weichat,diploma,job,timee,
+        requiree,salary_1,salary_2,shiyongqi,shixi,fuli,isQiyeQQ
+        )
+        values(
+        #{centerId},#{classTeacherId},#{corporiationId},#{contectName},#{contactPosition},#{hrmanager},#{tel},#{phone},#{qq},#{weichat},#{diploma},#{job},#{timee},
+        #{requiree},#{salary_1},#{salary_2},#{shiyongqi},#{shixi},#{fuli},#{isQiyeQQ}
+        )
+    </insert>
+
+
+    <select id="listConnectRecords" resultType="com.haitong.youcai.entity.CorporiationConnectRecoed">
+        SELECT *
+        FROM corporiationconnectrecoeds
+        WHERE  timee BETWEEN #{arg2} AND #{arg3}
+        <if test="arg0 != -1">AND #{arg0}=centerId</if>
+        <if test="arg0 != -1">AND #{arg1}=classteacherId</if>
+    </select>
+
+    <select id="listConnectRecords2" resultType="com.haitong.youcai.entity.CorporiationConnectRecoed">
+        SELECT *
+        FROM corporiationconnectrecoeds
+        WHERE
+        timee LIKE CONCAT(#{arg1}, '%')
+        <if test="arg0 != -1">AND #{arg0}=classteacherId</if>
+    </select>
+    <select id="listConnectRecords3" resultType="com.haitong.youcai.entity.CorporiationConnectRecoed">
+        SELECT *
+        FROM corporiationconnectrecoeds
+        WHERE
+        timee LIKE CONCAT(#{arg1}, '%')
+        AND (tel != "" OR phone != "")
+        <if test="arg0 != -1">AND #{arg0}=classteacherId</if>
+
+    </select>
+
+
+    <!--
+    SELECT corporiation, COUNT(*) AS cn FROM process_employ_interview WHERE datetimee BETWEEN '2019-09-03' AND '2019-09-06' AND result='成功' GROUP BY corporiation;
+     -->
+    <select id="getInterviewsByCondition" resultType="com.haitong.youcai.entity.InterviewItem">
+        SELECT corporiation, COUNT(*) AS cn
+        FROM process_employ_interview
+        WHERE
+        datetimee BETWEEN #{arg1} AND #{arg2}
+        <if test='arg0 != "全部" '>AND #{arg0}=result</if>
+        GROUP BY corporiation
+    </select>
+
+
+
+
+    <select id="selectCorporiationByCorporiationName" parameterType="String" resultType="com.haitong.youcai.entity.Corporiation">
+        SELECT
+        cid, cname, caddress,  contectName, contactPosition, hrmanager,
+         tel, phone, qq, weichat, isQiyeQQ,  isEnroll,
+         describee, timee, tid
+        FROM corporiation
+        WHERE cname=#{arg0}
+
+    </select>
+
+
+    <select id="selectCorporiationByTime"  resultType="com.haitong.youcai.entity.Corporiation">
+        SELECT
+        cid, cname, caddress,  contectName, contactPosition, hrmanager,
+        tel, phone, qq, weichat, isQiyeQQ,  isEnroll,
+        describee, timee, tid
+        FROM corporiation
+        WHERE timee BETWEEN #{arg0} AND #{arg1}
+
+    </select>
+
+    <select id="getCorporiationsByName"  resultType="com.haitong.youcai.entity.Corporiation">
+        SELECT
+        cid, cname, caddress,  contectName, contactPosition, hrmanager,
+        tel, phone, qq, weichat, isQiyeQQ,  isEnroll,
+        describee, timee, tid
+        FROM corporiation
+        WHERE cname LIKE CONCAT('%',#{arg0},'%')
+
+    </select>
+
+
+    <select id="getCorporiationsByWholeName"  resultType="com.haitong.youcai.entity.Corporiation">
+        SELECT
+        cid, cname, caddress,  contectName, contactPosition, hrmanager,
+        tel, phone, qq, weichat, isQiyeQQ,  isEnroll,
+        describee, timee, tid
+        FROM corporiation
+        WHERE cname=#{arg0}
+
+    </select>
+
+
+    <select id="getCoporiationsByMasterId"  resultType="string">
+        SELECT cname FROM corporiation
+        WHERE masterid=#{arg0}
+    </select>
+
+    <select id="getCoporiationsNoMaster"  resultType="string">
+        SELECT cname FROM corporiation
+        WHERE masterid=-1
+    </select>
+
+    <update id="updateCoporiationMasterId" >
+        UPDATE corporiation SET
+        masterid=#{arg1}
+        WHERE cname=#{arg0}
+    </update>
+
+    <update id="updateCoporiationNotMaster" >
+        UPDATE corporiation SET
+        masterid=-1
+        WHERE cname=#{arg0}
+    </update>
+
+
+
+
+
+</mapper>

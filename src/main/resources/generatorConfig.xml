@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <!-- 数据库驱动:选择你的本地硬盘上面的数据库驱动包-->
+    <!--location="D:\gis\mysql-connector-java-5.1.45-bin.jar"-->
+    <classPathEntry
+            location="D:\API\mysql-connector-java-8.0.17.jar" />
+
+    <context id="Tables" targetRuntime="MyBatis3">
+        <!--去除注释 -->
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+
+        <!--数据库连接 -->
+        <!--127.0.0.1/123456-->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/teach_haitong"
+                        userId="root"
+                        password="root">
+        </jdbcConnection>
+        <!--默认false Java type resolver will always use java.math.BigDecimal if
+            the database column is of type DECIMAL or NUMERIC. -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <!--生成实体类 指定包名 以及生成的地址 （可以自定义地址，但是路径不存在不会自动创建 使用Maven生成在target目录下，会自动创建） -->
+        <!-- 生成模型的包名和位置-->
+        <javaModelGenerator targetPackage="com.haitong.youcai.entity"  targetProject="D:\TeachManager0.1\src\main\java">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!-- 生成映射文件的包名和位置-->
+        <sqlMapGenerator targetPackage="com.haitong.youcai.mapper" targetProject="D:\TeachManager0.1\src\main\java">
+            <property name="enableSubPackages" value="true" />
+        </sqlMapGenerator>
+
+        <!--生成Dao文件 可以配置 type="XMLMAPPER"生成xml的dao实现 context id="DB2Tables" 修改targetRuntime="MyBatis3" -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.haitong.youcai.mapper" targetProject="D:\TeachManager0.1\src\main\java">
+            <property name="enableSubPackages" value="true" />
+        </javaClientGenerator>
+
+        <!--对应数据库表 mysql可以加入主键自增 字段命名 忽略某字段等 -->
+        <!-- 要生成的表 tableName是数据库中的表名或视图名 domainObjectName是实体类名-->
+        <!--table其他属性：
+            enableCountByExample="false"
+            enableUpdateByExample="false"
+            enableDeleteByExample="false"
+            enableSelectByExample="false"
+            selectByExampleQueryId="false"
+
+            schema即为数据库名, tableName为对应的数据库表, domainObjectName是要生成的实体类,
+            如果想要mapper配置文件加入sql的where条件查询, 可以将enableCountByExample等设为true,
+            这样就会生成一个对应domainObjectName的Example类, enableCountByExample等设为false时,
+            就不会生成对应的Example类了.
+
+            如果table里边不配置property，默认字段都生成为类属性。
+            <ignoreColumn column="FRED" />//忽略字段
+            <columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" />//无论字段是什么类型，生成的类属性都是varchar。 -->
+
+        <table tableName="class" domainObjectName="Class"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               selectByExampleQueryId="false" />
+    </context>
+</generatorConfiguration>

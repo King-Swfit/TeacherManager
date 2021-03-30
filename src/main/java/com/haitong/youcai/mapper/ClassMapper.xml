@@ -1,0 +1,1475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haitong.youcai.mapper.ClassMapper">
+
+    <select id="getCenterList" resultMap="getCenterMap">
+        select * from center c,teacher t, positions p where c.chargerId=t.tid and t.positionId=p.pid
+    </select>
+
+    <resultMap id="getCenterMap" type="com.haitong.youcai.entity.Center">
+        <id column="cid" property="cid" />
+        <result column="cname" property="cname" />
+        <result column="address" property="address" />
+        <result column="createTime" property="createTime" />
+        <result column="thumb" property="thumb" />
+
+        <association javaType="com.haitong.youcai.entity.Teacher" property="charger">
+            <id column="tid" property="tid" />
+            <result column="tname" property="tname" />
+            <result column="gender" property="gender" />
+            <result column="age" property="age" />
+            <result column="profession" property="profession" />
+            <result column="school" property="school" />
+            <result column="diploma" property="diploma" />
+            <result column="graduateDate" property="graduateDate" />
+            <result column="experience" property="experience" />
+            <result column="email" property="email" />
+            <result column="tel" property="tel" />
+            <result column="hireDate" property="hireDate" />
+            <result column="leaveDate" property="leaveDate" />
+            <result column="leaveReason" property="leaveReason" />
+            <result column="state" property="state" />
+
+            <association javaType="com.haitong.youcai.entity.Position" property="position">
+                <id column="pid" property="pid" />
+                <result column="pname" property="pname" />
+                <result column="salary" property="salary" />
+                <result column="createTime" property="createTime" />
+            </association>
+        </association>
+    </resultMap>
+
+
+    <select id="getDirectionList" resultMap="getDirectionMap">
+        select * from direction d,teacher t, positions p
+        where d.chargerId=t.tid and t.positionId=p.pid
+    </select>
+
+
+
+    <resultMap id="getDirectionMap" type="com.haitong.youcai.entity.Direction">
+        <id column="did" property="did" />
+        <result column="dname" property="dname" />
+        <result column="describee" property="describe" />
+        <result column="createTime" property="createTime" />
+        <result column="thumb" property="thumb" />
+
+        <association javaType="com.haitong.youcai.entity.Teacher" property="charger">
+            <id column="tid" property="tid" />
+            <result column="tname" property="tname" />
+            <result column="profession" property="profession" />
+            <result column="school" property="school" />
+            <result column="diploma" property="diploma" />
+            <result column="experience" property="experience" />
+            <result column="email" property="email" />
+            <result column="tel" property="tel" />
+            <result column="hireDate" property="hireDate" />
+            <result column="leaveDate" property="leaveDate" />
+            <result column="leaveReason" property="leaveReason" />
+            <result column="state" property="state" />
+
+            <association javaType="com.haitong.youcai.entity.Position" property="position">
+                <id column="pid" property="pid" />
+                <result column="pname" property="pname" />
+                <result column="salary" property="salary" />
+                <result column="createTime" property="createTime" />
+            </association>
+        </association>
+    </resultMap>
+
+
+
+
+    <select id="getClassTeachersByCenterId" parameterType="int" resultMap="getClassTeacherMap">
+        select * from classteacher ct
+         <if test="cid gt 0">, center c WHERE ct.centerId=c.cid AND c.cid=#{cid}</if>
+    </select>
+
+
+
+    <resultMap id="getClassTeacherMap" type="com.haitong.youcai.entity.ClassTeacher">
+        <id column="ctid" property="ctid" />
+        <result column="ctname" property="ctname" />
+        <result column="gender" property="gender" />
+        <result column="phone" property="tel" />
+        <result column="email" property="email" />
+        <result column="hiredate" property="hiredate" />
+        <result column="leavedate" property="leavedate" />
+        <result column="leaveReason" property="leaveReason" />
+        <result column="state" property="state" />
+
+
+        <association javaType="com.haitong.youcai.entity.Center" property="center">
+            <id column="cid" property="cid" />
+            <result column="cname" property="cname" />
+            <result column="address" property="address" />
+            <result column="createTime" property="createTime" />
+
+        </association>
+    </resultMap>
+
+
+    <!--List<BaseinfoForTrainee> getTrainBaseInfo(String classcode, String traineestate);-->
+    <!--<select id="getTeachersByCid" parameterType="int" resultMap="SimpleTeacherMap">-->
+        <!--select c.cid as cid, c.cname, t.tid,t.tname from teacher t, position p, course c where t.positionId=p.pid and p.courseId=c.cid and c.cid=#{arg0}-->
+    <!--</select>-->
+
+
+    <select id="getTeachersByCid" parameterType="int" resultMap="SimpleTeacherMap">
+        select c.cid as cid, c.cname, t.tid,t.tname
+        from teacher t, positions p, course c
+        where t.positionId=p.pid and p.courseId=c.cid and c.cid=#{arg0}
+    </select>
+
+    <resultMap id="SimpleTeacherMap" type="com.haitong.youcai.entity.SimpleTeacher">
+        <id column="cid" property="cid" />
+        <result column="cname" property="cname" />
+        <result column="tid" property="tid" />
+        <result column="tname" property="tname" />
+    </resultMap>
+
+
+
+    <select id="getCourseIdsByDirectionId" parameterType="int" resultType="com.haitong.youcai.entity.Course_t">
+        SELECT cid, cname
+        FROM course
+        WHERE directionId=#{arg0}
+    </select>
+
+    <!--                  班级编号                   -->
+    <select id="getClassCodesByCtid"  parameterType="int" resultType="String">
+        SELECT  classcode  FROM class_baseinfo WHERE classteacherId=#{clid}
+    </select>
+
+    <select id="getClassCodes"   resultType="String">
+        SELECT  classcode  FROM class_baseinfo
+    </select>
+
+    <select id="getClassCodesByCtidState"   resultType="String">
+        SELECT  classcode  FROM class_baseinfo
+        WHERE state=#{arg1}
+        <if test="arg0 > 0">and classteacherId=#{arg0}</if>
+    </select>
+    <select id="getClassCodesByState"   resultType="String">
+        SELECT  classcode  FROM class_baseinfo
+        <if test="arg0 > 0">WHERE classteacherId=#{arg0}</if>
+
+    </select>
+
+    <!--                  班级编号                   -->
+
+
+    <select id="getClassTeacherByCtName"  parameterType="String" resultMap="getClassTeacherMap">
+        SELECT  *  FROM classteacher WHERE ctname=#{arg0}
+    </select>
+
+    <select id="getClidByClassCode"  parameterType="String" resultType="com.haitong.youcai.entity.BaseInfo_Class">
+        SELECT  *  FROM class_baseinfo WHERE classcode=#{classcode}
+    </select>
+
+    <select id="getBaseInfoByClid"  parameterType="int" resultType="com.haitong.youcai.entity.BaseInfo_Class">
+        SELECT  *  FROM class_baseinfo WHERE clid=#{clid}
+   </select>
+
+    <select id="getClassGeneralInfo"  resultMap="getClassGeneralInfoMap">
+        SELECT  cbif.*, d.did, d.dname, ce.cid as ceid, ce.cname as cename,   ct.ctid, ct.ctname, ccpi.*,co.cid as coid,co.cname as coname,t.tid,t.tname
+        FROM class_baseinfo cbif, direction d, center ce, classteacher ct,      class_courseplanitem ccpi, course co,teacher t
+        WHERE cbif.centerId=ce.cid  AND   cbif.classteacherId=ct.ctid AND cbif.directionId=d.did AND cbif.classcode=ccpi.classcode AND  ccpi.courseId=co.cid AND  ccpi.teacherId=t.tid
+    </select>
+
+    <select id="getClassBaseInfo"  resultMap="getClassGeneralInfoMap">
+        SELECT  * FROM class_baseinfo
+    </select>
+
+
+
+    <select id="getClassGeneralInfoByCondition"  resultMap="getClassGeneralInfoMap" parameterType="com.haitong.youcai.entity.ClassQueryCondition">
+        SELECT  cbif.*, d.did, d.dname, ce.cid as ceid, ce.cname as cename,   ct.ctid, ct.ctname, ccpi.*,co.cid as coid,co.cname as coname,t.tid,t.tname
+        FROM class_baseinfo cbif, direction d, center ce, classteacher ct,      class_courseplanitem ccpi,  course co, teacher t
+        WHERE
+        cbif.beginDate BETWEEN #{startTime} AND #{endTime} AND
+
+        <if test="centerId != -1">
+            cbif.centerId=#{centerId} AND
+        </if>
+        <if test="classteacherId != -1">
+            cbif.classteacherId=#{classteacherId} AND
+        </if>
+
+        <if test="classstate != '全部'">
+            cbif.classstate=#{classstte}  AND
+        </if>
+
+        cbif.centerId=ce.cid  AND
+        cbif.classteacherId=ct.ctid AND
+        cbif.directionId=d.did AND
+        cbif.classcode=ccpi.classcode AND
+        ccpi.courseId=co.cid AND
+        ccpi.teacherId=t.tid
+    </select>
+
+
+
+    <select id="getClassGeneralInfoByCondition2"  resultType="com.haitong.youcai.entity.ClassGeneralInfo" parameterType="com.haitong.youcai.entity.ClassQueryCondition">
+        SELECT  cbif.*
+        FROM class_baseinfo cbif
+        WHERE
+        cbif.beginDate BETWEEN #{startTime} AND #{endTime}
+
+        <if test="centerId != -1">
+            AND cbif.centerId=#{centerId}
+        </if>
+        <if test="classteacherId != -1">
+            AND cbif.classteacherId=#{classteacherId}
+        </if>
+
+        <if test="classstate != '全部'">
+            AND cbif.classstate=#{classstte}
+        </if>
+        order by beginDate DESC
+
+    </select>
+
+    <select id="getClassGeneralInfoByCondition3"  resultType="String" parameterType="com.haitong.youcai.entity.ClassQueryCondition">
+        SELECT classcode
+        FROM class_baseinfo
+        WHERE
+        beginDate BETWEEN #{startTime} AND #{endTime}
+
+        <if test="centerId != -1">
+            AND centerId=#{centerId}
+        </if>
+        <if test="classteacherId != -1">
+            AND classteacherId=#{classteacherId}
+        </if>
+
+        <if test="classstate != '全部'">
+            AND classstate=#{classstte}
+        </if>
+
+    </select>
+
+
+
+    <resultMap id="getClassGeneralInfoMap" type="com.haitong.youcai.entity.ClassGeneralInfo">
+        <id column="clid" property="clid" />
+        <result column="classcode" property="classcode" />
+        <result column="beginDate" property="beginDate" />
+        <result column="preExamGraducateDate" property="preExamGraducateDate" />
+        <result column="preGraducateDate" property="preGraducateDate" />
+        <result column="realExamGraducateDate" property="realExamGraducateDate" />
+        <result column="realGraducateDate" property="realGraducateDate" />
+        <result column="state" property="state" />
+        <result column="initPfx" property="initPfx" />
+
+        <association javaType="com.haitong.youcai.entity.Direction" property="direction">
+            <id column="did" property="did" />
+            <result column="dname" property="dname" />
+        </association>
+
+        <association javaType="com.haitong.youcai.entity.Center" property="center">
+            <id column="ceid" property="cid" />
+            <result column="cename" property="cname" />
+        </association>
+
+        <association javaType="com.haitong.youcai.entity.ClassTeacher" property="classteacher">
+            <id column="ctid" property="ctid" />
+            <result column="ctname" property="ctname" />
+        </association>
+
+        <collection ofType="com.haitong.youcai.entity.CoursePlanItem_Class_f" property="courseItems">
+            <id column="ciiid" property="ciiid" />
+            <result column="preBeginDate" property="preBeginDate" />
+            <result column="preEndDate" property="preEndDate" />
+            <result column="preProEndDate" property="preProEndDate" />
+
+            <result column="realBeginDate" property="realBeginDate" />
+            <result column="realEndDate" property="realEndDate" />
+            <result column="realProEndDate" property="realProEndDate" />
+
+            <association javaType="com.haitong.youcai.entity.Course" property="course">
+                <id column="coid" property="cid" />
+                <result column="coname" property="cname" />
+            </association>
+
+            <association javaType="com.haitong.youcai.entity.Teacher" property="teacher">
+                <id column="tid" property="tid" />
+                <result column="tname" property="tname" />
+            </association>
+
+        </collection>
+    </resultMap>
+
+
+
+    <update id="updateBaseInfos" parameterType="com.haitong.youcai.entity.BaseInfo_Class">
+        update class_baseinfo
+        <set>
+            classteacherId=#{classteacherId},beginDate=#{beginDate},initPfx=#{initPfx}, state=#{state}
+        </set>
+        <where>
+            clid=#{clid}
+        </where>
+
+    </update>
+
+    <!-- 批量更新赛程 -->
+    <update id="updateCoursePlanItems" parameterType="java.util.List">
+        <foreach collection="coursePlanItems" item="courseplanitem_class" index="index" open="" close="" separator=";">
+            update class_courseplanitem
+            <set>
+                teacherId=#{courseplanitem_class.teacherId},
+
+                <if test="courseplanitem_class.realBeginDate !=null and courseplanitem_class.realBeginDate != ''">
+                    realBeginDate = #{courseplanitem_class.realBeginDate},
+                </if>
+                <if test="courseplanitem_class.realEndDate !=null and courseplanitem_class.realEndDate != ''">
+                    realEndDate = #{courseplanitem_class.realEndDate},
+                </if>
+                <if test="courseplanitem_class.realProEndDate !=null and courseplanitem_class.realProEndDate != ''">
+                    realProEndDate = #{courseplanitem_class.realProEndDate}
+                </if>
+            </set>
+            <where>
+                courseId = #{courseplanitem_class.courseId}
+            </where>
+
+        </foreach>
+    </update>
+
+
+  <insert id="insertBaseInfos" parameterType="com.haitong.youcai.entity.BaseInfo_Class">
+    insert into class_baseinfo(classcode, directionId, centerId, classteacherId,beginDate,state)
+    values(#{classcode},#{directionId},#{centerId},#{classteacherId},#{beginDate}, #{state})
+  </insert>
+
+
+  <insert id="insertCoursePlanItems">
+    INSERT INTO class_courseplanitem(classcode, courseId, teacherId, preBeginDate,preEndDate,preProEndDate)
+    VALUES
+    <foreach collection ="list" item="courseplanitem_class" index="index" separator =",">
+      (#{courseplanitem_class.classcode}, #{courseplanitem_class.courseId}, #{courseplanitem_class.teacherId},
+      #{courseplanitem_class.preBeginDate},#{courseplanitem_class.preEndDate}, #{courseplanitem_class.preProEndDate})
+    </foreach >
+  </insert>
+
+
+    <insert id="createEmployInfos_batchTrainee" parameterType="java.util.List">
+        INSERT INTO employinfo_trainee(code)
+        VALUES
+        <foreach collection ="list" item="baseinfoForTrainee" index="index" separator =",">
+            (#{baseinfoForTrainee.code})
+        </foreach >
+    </insert>
+
+
+    <insert id="createComprehensiveBaseInfos_batchTrainee" parameterType="java.util.List">
+        INSERT INTO comprehensivescore_baseinfo_trainee(code)
+        VALUES
+        <foreach collection ="list" item="baseinfoForTrainee" index="index" separator =",">
+            (#{baseinfoForTrainee.code})
+        </foreach >
+    </insert>
+
+
+
+    <insert id="createComprehensiveScoreInfos_batchTrainee_java" parameterType="java.util.List">
+        INSERT INTO comprehensivescore_javaee(code)
+        VALUES
+        <foreach collection ="list" item="baseinfoForTrainee" index="index" separator =",">
+            (#{baseinfoForTrainee.code})
+        </foreach >
+    </insert>
+
+
+    <insert id="createComprehensiveScoreInfos_batchTrainee_ai" parameterType="java.util.List">
+        INSERT INTO comprehensivescore_ai(code)
+        VALUES
+        <foreach collection ="list" item="baseinfoForTrainee" index="index" separator =",">
+            (#{baseinfoForTrainee.code})
+        </foreach >
+    </insert>
+
+
+    <insert id="insertBaseInfos_batchTrainee" parameterType="java.util.List">
+        INSERT INTO baseinfo_trainee(code, trname, gender, directionId,centerId, card, classcode,diploma,graducateTime,profession,graduateSchool,tel,email,contact,contactTel,lendWay,state)
+        VALUES
+        <foreach collection ="list" item="baseinfoForTrainee" index="index" separator =",">
+            (#{baseinfoForTrainee.code},#{baseinfoForTrainee.name}, #{baseinfoForTrainee.gender},
+            #{baseinfoForTrainee.directionId}, #{baseinfoForTrainee.centerId}, #{baseinfoForTrainee.card}, #{baseinfoForTrainee.classcode},
+            #{baseinfoForTrainee.diploma}, #{baseinfoForTrainee.graducateTime}, #{baseinfoForTrainee.profession},
+            #{baseinfoForTrainee.graduateSchool},#{baseinfoForTrainee.tel}, #{baseinfoForTrainee.email},
+            #{baseinfoForTrainee.contact},#{baseinfoForTrainee.contactTel}, #{baseinfoForTrainee.lendWay}, #{baseinfoForTrainee.state})
+        </foreach >
+    </insert>
+
+
+
+    <insert id="insertBaseInfos_batchTrainee_one" parameterType="com.haitong.youcai.entity.BaseinfoForTrainee">
+        INSERT INTO baseinfo_trainee(code, trname, gender, directionId,centerId, card, classcode,diploma,graducateTime,profession,graduateSchool,tel,email,contact,contactTel,lendWay,state)
+        VALUES (#{code},#{name}, #{gender},
+            #{directionId}, #{centerId}, #{card}, #{classcode},
+            #{diploma}, #{graducateTime}, #{profession},
+            #{graduateSchool},#{tel}, #{email},
+            #{contact},#{contactTel}, #{lendWay}, #{state})
+    </insert>
+
+    <update id="updatePayproofState" >
+        UPDATE baseinfo_trainee SET payproof=#{arg1} WHERE code=#{arg0}
+    </update>
+
+    <update id="updateDiplomaState" >
+        UPDATE baseinfo_trainee SET diplomaImg=#{arg1} WHERE code=#{arg0}
+    </update>
+
+    <update id="updateWorkproofState" >
+        UPDATE baseinfo_trainee SET employImg=#{arg1} WHERE code=#{arg0}
+    </update>
+
+    <update id="updateCard1State" >
+        UPDATE baseinfo_trainee SET cardImg1=#{arg1} WHERE code=#{arg0}
+    </update>
+
+    <update id="updateCard2State" >
+        UPDATE baseinfo_trainee SET cardImg2=#{arg1} WHERE code=#{arg0}
+    </update>
+
+
+    <select id="getPhotoNameByCodeType_pay"  resultType="String">
+        SELECT  payproof FROM baseinfo_trainee WHERE code=#{arg0}
+    </select>
+
+    <select id="getPhotoNameByCodeType_diploma"  resultType="String">
+        SELECT  diplomaImg FROM baseinfo_trainee WHERE code=#{arg0}
+    </select>
+
+    <select id="getPhotoNameByCodeType_work"  resultType="String">
+        SELECT  employImg FROM baseinfo_trainee WHERE code=#{arg0}
+    </select>
+
+    <select id="getPhotoNameByCodeType_card1"  resultType="String">
+        SELECT  cardImg1 FROM baseinfo_trainee WHERE code=#{arg0} and payproof=#{arg1}
+    </select>
+    <select id="getPhotoNameByCodeType_card2"  resultType="String">
+        SELECT  cardImg2 FROM baseinfo_trainee WHERE code=#{arg0}
+    </select>
+
+
+    <insert id="createNews" parameterType="com.haitong.youcai.entity.News" useGeneratedKeys="true" keyProperty="id">
+        insert into news(classcode, createTime, authorId) values(#{classcode},#{createTime},#{authorId})
+    </insert>
+
+
+    <insert id="createImgForNews" >
+        insert into imagefornews(imageUrl, newsId) values(#{arg0},#{arg1})
+    </insert>
+
+    <update id="updateNews" >
+        UPDATE news SET title=#{arg1},content=#{arg2} WHERE id=#{arg0}
+    </update>
+
+    <select id="listNews"  parameterType="String" resultMap="getNewsMap">
+        SELECT  news.id id, news.title title, news.content content, news.classcode classcode, news.createTIme createTime, imagefornews.id iid,imagefornews.imageUrl imageUrl FROM news,imagefornews WHERE news.id= imagefornews.newsId AND  news.classcode=#{arg0}
+    </select>
+
+
+    <resultMap id="getNewsMap" type="com.haitong.youcai.entity.News">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="classcode" property="classcode" />
+        <result column="createTime" property="createTime" />
+
+        <collection ofType="com.haitong.youcai.entity.NewsImg" property="imgUrls">
+            <id column="iid" property="id" />
+            <result column="imageUrl" property="url" />
+        </collection>
+    </resultMap>
+
+    <select id="getNewsContentByNewsId"  parameterType="int" resultType="String">
+        SELECT  content FROM news WHERE id=#{arg0}
+    </select>
+
+    <select id="getClassCodesByClidTime"   resultType="String">
+        SELECT  classcode  FROM class_baseinfo WHERE classteacherId=#{arg0}  AND beginDate BETWEEN #{arg1} AND #{arg2}
+    </select>
+
+
+    <!--List<ComprehensiveScore_java> getComprehensiveScoreByClassCode_java(String classcode);-->
+    <select id="getComprehensiveScoreByClassCode_java"  parameterType="String" resultMap="getComprehensivejavaMap">
+        SELECT
+         bt.id id, bt.code code, bt.trname trname,
+         cbt.type type, cbt.diploma diploma, cbt.graduatetime graduatetime,cbt.prefession prefession,
+         cbt.enery_employ enery_employ, cbt.corporation corporation, cbt.salary salary,
+         cj.java_basegrammer_check java_basegrammer_check, cj.java_oo_test java_oo_test,cj.java_datastruct_test java_datastruct_test,
+         cj.se_pro se_pro, cj.webpage_check webpage_check, cj.ssmh_check ssmh_check, cj.databs dbst,cj.ee_pro ee_pro
+        FROM baseinfo_trainee bt, comprehensivescore_baseinfo_trainee cbt, comprehensivescore_javaee cj
+         WHERE bt.classcode=#{arg0} AND bt.code=cbt.code AND cbt.code=cj.code
+    </select>
+
+    <!--List<ComprehensiveScore_ai> getComprehensiveScoreByClassCode_ai(String classcode);-->
+    <select id="getComprehensiveScoreByClassCode_ai"  parameterType="String" resultMap="getComprehensiveaiMap">
+        SELECT
+         bt.id id, bt.code code, bt.trname trname,
+         cbt.type type, cbt.diploma diploma, cbt.graduatetime graduatetime,cbt.prefession prefession,
+         cbt.enery_employ enery_employ, cbt.corporation corporation, cbt.salary salary,
+         ca.c_grammer_test c_grammer_test, ca.array_struct_test array_struct_test,ca.pointer_check pointer_check,ca.c_pro c_pro,
+         ca.lsd_test lsd_test, ca.cplusplus_oo_check cplusplus_oo_check, ca.qt_test qt_test, ca.cplusplus_pro cplusplus_pro,
+         ca.pro pro
+        FROM baseinfo_trainee bt, comprehensivescore_baseinfo_trainee cbt, comprehensivescore_ai ca
+         WHERE bt.classcode=#{arg0} AND bt.code=cbt.code AND cbt.code=ca.code
+    </select>
+
+    <resultMap id="getComprehensivejavaMap" type="com.haitong.youcai.entity.ComprehensiveScore_java">
+        <id column="id" property="id" />
+        <result column="code" property="code" />
+        <result column="trname" property="name" />
+
+        <result column="type" property="type" />
+        <result column="diploma" property="diploma" />
+        <result column="graduatetime" property="graduateTime" />
+        <result column="prefession" property="prefession" />
+        <result column="enery_employ" property="enery_employ" />
+        <result column="corporation" property="corporation" />
+        <result column="salary" property="salary" />
+
+        <result column="java_basegrammer_check" property="java_basegrammer_check" />
+        <result column="java_oo_test" property="java_oo_test" />
+        <result column="java_datastruct_test" property="java_datastruct_test" />
+        <result column="se_pro" property="se_pro" />
+        <result column="webpage_check" property="webpage_check" />
+        <result column="ssmh_check" property="ssmh_check" />
+        <result column="dbst" property="database" />
+        <result column="ee_pro" property="ee_pro" />
+    </resultMap>
+
+
+    <resultMap id="getComprehensiveaiMap" type="com.haitong.youcai.entity.ComprehensiveScore_ai">
+        <id column="id" property="id" />
+        <result column="code" property="code" />
+        <result column="trname" property="name" />
+
+        <result column="type" property="type" />
+        <result column="diploma" property="diploma" />
+        <result column="graduatetime" property="graduateTime" />
+        <result column="prefession" property="prefession" />
+        <result column="enery_employ" property="enery_employ" />
+        <result column="corporation" property="corporation" />
+        <result column="salary" property="salary" />
+
+        <result column="c_grammer_test" property="c_grammer_test" />
+        <result column="array_struct_test" property="array_struct_test" />
+        <result column="pointer_check" property="pointer_check" />
+        <result column="c_pro" property="c_pro" />
+        <result column="lsd_test" property="lsd_test" />
+        <result column="cplusplus_oo_check" property="cplusplus_oo_check" />
+        <result column="qt_test" property="qt_test" />
+        <result column="cplusplus_pro" property="cplusplus_pro" />
+        <result column="pro" property="pro" />
+    </resultMap>
+
+
+    <update id="updateComprehensiveScoreByClassCode_baseInfo" parameterType="com.haitong.youcai.entity.ComprehensiveScore_baseinfo">
+        UPDATE comprehensivescore_baseinfo_trainee SET diploma=#{diploma},graduatetime=#{graduateTime},prefession=#{prefession},
+        enery_employ=#{enery_employ},corporation=#{corporation},salary=#{salary},type=#{type}
+         WHERE code=#{code}
+    </update>
+
+
+    <update id="updateComprehensiveScoreByClassCode_java" parameterType="com.haitong.youcai.entity.ComprehensiveScore_java">
+        UPDATE comprehensivescore_javaee SET
+        java_basegrammer_check=#{java_basegrammer_check},
+        java_oo_test=#{java_oo_test},
+        java_datastruct_test=#{java_datastruct_test},
+        se_pro=#{se_pro},
+        webpage_check=#{webpage_check},
+        ssmh_check=#{ssmh_check},
+        databs=#{database},
+        ee_pro=#{ee_pro}
+
+        WHERE code=#{code}
+    </update>
+
+
+    <update id="updateComprehensiveScoreByClassCode_ai" parameterType="com.haitong.youcai.entity.ComprehensiveScore_ai">
+        UPDATE comprehensivescore_ai SET
+        c_grammer_test=#{c_grammer_test},
+        array_struct_test=#{array_struct_test},
+        pointer_check=#{pointer_check},
+        c_pro=#{c_pro},
+        lsd_test=#{lsd_test},
+        cplusplus_oo_check=#{cplusplus_oo_check},
+        qt_test=#{qt_test},
+        cplusplus_pro=#{cplusplus_pro},
+        pro=#{pro}
+        WHERE code=#{code}
+    </update>
+
+
+    <update id="updateScoreItem_java" >
+        UPDATE comprehensivescore_javaee SET
+
+        <if test="arg4=='质检1(数组,静态方法)'">
+            java_basegrammer_check=#{arg2}
+        </if>
+
+        <if test="arg4=='质检2(oo,集合,异常)'">
+            java_oo_test=#{arg2},java_datastruct_test=#{arg2}
+        </if>
+
+        <if test="arg4=='质检3(html,css,js,jquery)'">
+            webpage_check=#{arg2}
+        </if>
+
+        <if test="arg4=='质检4(SSMH)'">
+            ssmh_check=#{arg2}
+        </if>
+
+        <if test="arg4=='se项目'">
+            se_pro=#{arg2}
+        </if>
+
+        <if test="arg4=='ee项目'">
+            ee_pro=#{arg2}
+        </if>
+        WHERE code=#{arg0}
+    </update>
+
+
+    <update id="updateScoreItem_ai" >
+        UPDATE comprehensivescore_ai SET
+
+        <if test="arg4=='质检1(数组,函数)'">
+            array_struct_test=#{arg2}
+        </if>
+
+        <if test="arg4=='质检2(指针和链表)'">
+            pointer_check=#{arg2}
+        </if>
+
+        <if test="arg4=='质检3(c++ oo)'">
+            cplusplus_oo_check=#{arg2}
+        </if>
+
+        <if test="arg4=='c项目'">
+            c_pro=#{arg2}
+        </if>
+
+        <if test="arg4=='c++项目'">
+            cplusplus_pro=#{arg2}
+        </if>
+
+        <if test="arg4=='毕业项目'">
+            pro=#{arg2}
+        </if>
+
+        WHERE code=#{arg0}
+    </update>
+
+
+
+
+    <select id="listClassStates"   resultType="String">
+        SELECT  stname FROM classstate
+    </select>
+
+    <select id="getTraineeStates"   resultType="String">
+        SELECT  tsname FROM traineestate
+    </select>
+
+    <select id="getPayWays"   resultType="String">
+        SELECT  pname FROM payway
+    </select>
+
+    <select id="getEmployWays"   resultType="String">
+        SELECT  epname FROM employway
+    </select>
+
+    <select id="getDiplomaStates"   resultType="String">
+        SELECT  dname FROM diplomaState
+    </select>
+
+
+    <select id="getBaseInfoForTraineeByClassCode"  parameterType="String" resultMap="BaseinfoForTraineeMap">
+        SELECT
+        bt.id id, bt.code code, bt.gender gender, bt.trname trname, bt.directionId directionId,
+        bt.centerId centerId, bt.card card, bt.classcode classcode, bt.diploma diploma, bt.graducateTime graducateTime, bt.profession profession,
+        bt.graduateSchool graduateSchool, bt.tel tel, bt.email email, bt.contact contact, bt.contactTel contactTel, bt.lendWay lendWay, bt.payproof payproof,
+        bt.diplomaImg diplomaImg, bt.employImg employImg, bt.cardImg1 cardImg1, bt.cardImg2 cardImg2, bt.state state,
+        et.eiid eiid, et.code ecode, et.state estate, et.employ_time employ_time, et.employ_unit employ_unit, et.employ_position employ_position,
+        et.employ_salary employ_salary
+         FROM baseinfo_trainee bt LEFT JOIN employinfo_trainee et ON bt.code=et.code
+         WHERE bt.classcode=#{arg0}
+    </select>
+
+    <select id="getBaseInfoForTraineeByCode2"  parameterType="String" resultMap="BaseinfoForTraineeMap">
+        SELECT
+        bt.id id, bt.code code, bt.gender gender, bt.trname trname, bt.directionId directionId,
+        bt.centerId centerId, bt.card card, bt.classcode classcode, bt.diploma diploma, bt.graducateTime graducateTime, bt.profession profession,
+        bt.graduateSchool graduateSchool, bt.tel tel, bt.email email, bt.contact contact, bt.contactTel contactTel, bt.lendWay lendWay, bt.payproof payproof,
+        bt.diplomaImg diplomaImg, bt.employImg employImg, bt.cardImg1 cardImg1, bt.cardImg2 cardImg2, bt.state state,
+        et.eiid eiid, et.code ecode, et.state estate, et.employ_time employ_time, et.employ_unit employ_unit, et.employ_position employ_position,
+        et.employ_salary employ_salary
+        FROM baseinfo_trainee bt LEFT JOIN employinfo_trainee et ON bt.code=et.code
+        WHERE bt.code=#{arg0}
+    </select>
+
+    <resultMap id="BaseinfoForTraineeMap" type="com.haitong.youcai.entity.BaseinfoForTrainee">
+        <id column="id" property="id" />
+        <result column="code" property="code" />
+        <result column="gender" property="gender" />
+        <result column="trname" property="name" />
+        <result column="directionId" property="directionId" />
+        <result column="centerId" property="centerId" />
+        <result column="card" property="card" />
+        <result column="classcode" property="classcode" />
+        <result column="diploma" property="diploma" />
+
+        <result column="graducateTime" property="graducateTime" />
+        <result column="profession" property="profession" />
+        <result column="graduateSchool" property="graduateSchool" />
+        <result column="tel" property="tel" />
+        <result column="email" property="email" />
+
+        <result column="contact" property="contact" />
+        <result column="contactTel" property="contactTel" />
+        <result column="lendWay" property="lendWay" />
+
+        <result column="payproof" property="payproof" />
+        <result column="diplomaImg" property="diplomaImg" />
+        <result column="employImg" property="employImg" />
+        <result column="cardImg1" property="cardImg1" />
+        <result column="cardImg2" property="cardImg2" />
+
+        <result column="state" property="state" />
+
+
+        <association javaType="com.haitong.youcai.entity.EmployInfoForTrainee" property="employInfoForTrainee">
+            <id column="eiid" property="eiid" />
+            <result column="ecode" property="code" />
+            <result column="estate" property="state" />
+            <result column="employ_time" property="employ_time" />
+
+            <result column="employ_unit" property="employ_unit" />
+            <result column="employ_position" property="employ_position" />
+            <result column="employ_salary" property="employ_salary" />
+
+        </association>
+    </resultMap>
+
+
+
+
+    <select id="getClassTeacherIdByClassCode"  parameterType="String"  resultType="int">
+        SELECT  classteacherId FROM class_baseinfo WHERE classcode=#{arg0}
+    </select>
+
+    <select id="getCtnameByCtid"  parameterType="int"  resultType="String">
+        SELECT  ctname FROM classteacher WHERE ctid=#{arg0}
+    </select>
+
+
+    <select id="getDirectionIdByClassCode"  parameterType="String"  resultType="int">
+        SELECT  directionId FROM class_baseinfo WHERE classcode=#{arg0}
+    </select>
+
+    <select id="getDnameByDid"  parameterType="int"  resultType="String">
+        SELECT  dname FROM direction WHERE did=#{arg0}
+    </select>
+
+
+
+    <select id="getBaseInfoForTraineeByCode"  parameterType="String" resultType="com.haitong.youcai.entity.BaseinfoForTrainee">
+        SELECT
+        id, code, classcode, payproof,diplomaImg,employImg,cardImg1,cardImg2
+        FROM baseinfo_trainee
+        WHERE code=#{arg0}
+    </select>
+
+
+    <insert id="insertBaseInfoForTrainee" parameterType="com.haitong.youcai.entity.BaseinfoForTrainee">
+        INSERT INTO baseinfo_trainee(code, trname, gender, directionId,centerId, card, classcode,diploma,graducateTime,profession,
+        graduateSchool,tel,email,contact,contactTel,lendWay)
+        VALUES
+        (#{code},#{name}, #{gender},#{directionId}, #{centerId}, #{card}, #{classcode},#{diploma}, #{graducateTime}, #{profession},
+        #{graduateSchool},#{tel}, #{email},#{contact},#{contactTel}, #{lendWay})
+    </insert>
+
+    <insert id="insertEmployInfoForTrainee" parameterType="com.haitong.youcai.entity.EmployInfoForTrainee">
+        INSERT INTO employinfo_trainee(code, state, employ_time, employ_unit,employ_position,employ_salary,comment1)
+        VALUES(#{code},#{state}, #{employ_time},#{employ_unit}, #{employ_position},#{employ_salary},#{comment})
+    </insert>
+
+
+    <update id="updateBaseInfoForTrainee" parameterType="com.haitong.youcai.entity.BaseinfoForTrainee">
+        UPDATE baseinfo_trainee SET
+        trname=#{name}, gender=#{gender}, directionId=#{directionId},centerId=#{centerId}, card=#{card}, classcode=#{classcode},
+        diploma=#{diploma},graducateTime=#{graducateTime},profession=#{profession},
+        graduateSchool=#{graduateSchool},tel=#{tel},email=#{email},contact=#{contact},contactTel=#{contactTel},lendWay=#{lendWay}
+        WHERE code=#{code}
+    </update>
+
+    <update id="updateEmployInfoForTrainee" parameterType="com.haitong.youcai.entity.EmployInfoForTrainee">
+        UPDATE  employinfo_trainee set
+        state=#{state}, employ_time=#{employ_time}, employ_unit=#{employee_unit}, employ_salary=#{employ_salary}
+        where code = #{code}
+    </update>
+
+
+    <insert id="createPayproofState" >
+        insert baseinfo_trainee(payproof,code) values(#{arg1},#{arg0})
+    </insert>
+
+    <insert id="createDiplomaState" >
+        insert baseinfo_trainee(diplomaImg,code) values(#{arg1},#{arg0})
+    </insert>
+
+    <insert id="createWorkproofState" >
+        insert baseinfo_trainee(employImg,code) values(#{arg1},#{arg0})
+    </insert>
+
+    <insert id="createCard1State" >
+        insert baseinfo_trainee(cardImg1,code) values(#{arg1},#{arg0})
+    </insert>
+
+    <insert id="createCard2State" >
+        insert baseinfo_trainee(cardImg2,code) values(#{arg1},#{arg0})
+    </insert>
+
+
+    <insert id="createEmployInfo" >
+        insert employinfo_trainee(code) values(#{arg0})
+    </insert>
+
+    <insert id="createComprehensiveBaseInfo" >
+        insert comprehensivescore_baseinfo_trainee(code) values(#{arg0})
+    </insert>
+
+    <insert id="createComprehensiveScoreInfo_java" >
+        insert comprehensivescore_javaee(code) values(#{arg0})
+    </insert>
+
+    <insert id="createComprehensiveScoreInfo_ai" >
+        insert comprehensivescore_javaee(code) values(#{arg0})
+    </insert>
+
+    <select id="getCenterIdByCname" >
+        select cid from center WHERE cname=(#{arg0})
+    </select>
+
+    <insert id="createTraineeScores_batchTrainee" parameterType="java.util.List">
+        INSERT INTO process_trainee_score(code,classcode)
+        VALUES
+        <foreach collection ="list" item="baseinfoForTrainee" index="index" separator =",">
+            (#{baseinfoForTrainee.code},#{baseinfoForTrainee.classcode})
+        </foreach >
+    </insert>
+
+    <insert id="createTraineeScore" parameterType="com.haitong.youcai.entity.BaseinfoForTrainee">
+        INSERT INTO process_trainee_score(code,classcode) VALUES(#{baseinfoForTrainee.code},#{baseinfoForTrainee.classcode})
+    </insert>
+
+
+    <select id="listClasscode"  resultType="String">
+        select classcode from class_baseinfo
+    </select>
+
+
+    <select id="getInterviewCountForClass"  resultType="com.haitong.youcai.entity.KV">
+        select pei.classcode k, count(*) v from process_employ_interview pei
+        <if test="arg0 != -1">,class_baseinfo cb</if>
+        WHERE datetimee BETWEEN #{arg1} AND #{arg2}
+        <if test="arg0 != -1">AND pei.classcode=cb.classcode AND cb.centerId=#{arg0}</if>
+        GROUP BY pei.classcode
+    </select>
+
+    <select id="getInterviewCountForClass2"  resultType="com.haitong.youcai.entity.KV">
+        select pei.classcode k, count(*) v from process_employ_interview pei
+        <if test="arg0 != -1">,class_baseinfo cb</if>
+        WHERE datetimee LIKE CONCAT(#{arg1}, '%')
+        <if test="arg0 != -1">AND pei.classcode=cb.classcode AND cb.classteacherId=#{arg0}</if>
+        GROUP BY pei.classcode
+    </select>
+
+    <select id="getAvgSalaryForZhuan"  resultType="com.haitong.youcai.entity.AvgSalary">
+        SELECT pei.classcode as classcode,  AVG(pei.realSalary) as avgSalaryForZhuan
+        FROM process_employ_interview pei,  baseinfo_trainee bt
+        WHERE
+        pei.datetimee BETWEEN #{arg1} AND #{arg2}
+        AND bt.code=pei.code
+        AND pei.result='成功'  AND bt.diploma LIKE CONCAT("%专%")
+        GROUP BY pei.classcode;
+    </select>
+
+    <select id="getAvgSalaryForZhuan2"  resultType="com.haitong.youcai.entity.AvgSalary">
+        SELECT pei.classcode classcode, ct.ctname ctname, AVG(pei.realSalary) avgSalaryForZhuan
+        FROM process_employ_interview pei,  baseinfo_trainee bt, class_baseinfo cb, classteacher ct
+        WHERE
+        pei.datetimee LIKE CONCAT(#{arg1},'%')
+        AND bt.code=pei.code
+        AND cb.classcode=pei.classcode
+        AND cb.classteacherId=ct.ctid
+        <if test="arg0 != -1">AND pei.classcode=cb.classcode AND cb.classteacherId=#{arg0}</if>
+        AND result='成功'  AND bt.diploma='大专'
+        GROUP BY classcode;
+    </select>
+
+    <select id="getAvgSalaryForBen"  resultType="com.haitong.youcai.entity.AvgSalary">
+        SELECT pei.classcode as classcode,  AVG(pei.realSalary) as avgSalaryForBen
+        FROM process_employ_interview pei,  baseinfo_trainee bt
+        WHERE
+        pei.datetimee BETWEEN #{arg1} AND #{arg2}
+        AND bt.code=pei.code
+        AND pei.result='成功'  AND bt.diploma LIKE CONCAT("%本%")
+        GROUP BY pei.classcode;
+    </select>
+
+    <select id="getAvgSalaryForBen2"  resultType="com.haitong.youcai.entity.AvgSalary">
+        SELECT pei.classcode classcode, ct.ctname ctname, AVG(pei.realSalary) avgSalaryForBen
+        FROM process_employ_interview pei,  baseinfo_trainee bt, class_baseinfo cb, classteacher ct
+        WHERE
+        pei.datetimee LIKE CONCAT(#{arg1},'%')
+        AND bt.code=pei.code
+        AND cb.classcode=pei.classcode
+        AND cb.classteacherId=ct.ctid
+        <if test="arg0 != -1">AND pei.classcode=cb.classcode AND cb.classteacherId=#{arg0}</if>
+        AND result='成功'  AND bt.diploma='本科'
+        GROUP BY classcode;
+    </select>
+
+
+
+    <select id="getClassCount"  resultType="com.haitong.youcai.entity.KV">
+        SELECT classcode k, COUNT(*) v FROM process_employ_interview
+        WHERE datetimee BETWEEN #{arg0} AND #{arg1}
+        GROUP BY classcode
+    </select>
+
+
+    <select id="getInterviewPeriod"  resultType="com.haitong.youcai.entity.InterviewPeriod">
+        SELECT classcode classcode1 ,CODE code1, DATEDIFF(MAX(datetimee), MIN(datetimee)) period
+        FROM process_employ_interview
+        WHERE datetimee BETWEEN #{arg0} AND #{arg1} AND
+        CODE IN
+        (SELECT CODE FROM process_employ_interview WHERE result='成功' AND datetimee BETWEEN #{arg0} AND #{arg1})
+        GROUP BY CODE
+    </select>
+
+
+    <select id="getInterviewPeriod2"  resultType="com.haitong.youcai.entity.InterviewPeriod">
+        SELECT pei.classcode classcode1 ,pei.code code1, (UNIX_TIMESTAMP(MAX(pei.datetimee)) - UNIX_TIMESTAMP(MIN(pei.datetimee))) period
+        FROM process_employ_interview pei
+        WHERE pei.code IN
+        (SELECT pei1.code FROM process_employ_interview pei1
+        <if test="arg0 != -1">,class_baseinfo cb</if>
+        WHERE pei1.result='成功' AND pei1.datetimee LIKE CONCAT(#{arg1}, '%')
+        <if test="arg0 != -1">AND pei.classcode=cb.classcode AND cb.classteacherId=#{arg0}</if>
+        )
+        GROUP BY pei.code
+    </select>
+
+
+    <select id="getCountForInterviewSuccess"  resultType="com.haitong.youcai.entity.KV">
+        select classcode k, count(*) v from process_employ_interview
+        WHERE datetimee BETWEEN #{arg0} AND #{arg1}
+        AND result='成功'
+        GROUP BY classcode
+    </select>
+
+    <select id="getCountForInterviewSuccess2"  resultType="com.haitong.youcai.entity.KV">
+        select pei.classcode k, count(*) v from process_employ_interview pei
+        <if test="arg0 != -1">,class_baseinfo cb</if>
+        WHERE datetimee LIKE CONCAT(#{arg1}, '%')
+        AND result='成功'
+        <if test="arg0 != -1">AND pei.classcode=cb.classcode AND cb.classteacherId=#{arg0}</if>
+        GROUP BY pei.classcode
+    </select>
+
+    <select id="getCountForDevSuccess"  resultType="com.haitong.youcai.entity.KV">
+        select classcode k, count(*) v
+        from process_employ_interview
+        WHERE datetimee BETWEEN #{arg0} AND #{arg1}
+        AND result='成功' AND POSITION LIKE '%开发%' OR POSITION LIKE '%dev%'
+        GROUP BY classcode
+    </select>
+
+    <select id="getCountForDevSuccess2"  resultType="com.haitong.youcai.entity.KV">
+        select pei.classcode k, count(*) v
+        from process_employ_interview pei
+        <if test="arg0 != -1">,class_baseinfo cb</if>
+        WHERE datetimee LIKE CONCAT(#{arg1}, '%')
+        AND result='成功'
+        AND POSITION LIKE '%开发%' OR POSITION LIKE '%工程师%'
+        <if test="arg0 != -1">AND pei.classcode=cb.classcode AND cb.classteacherId=#{arg0}</if>
+        GROUP BY pei.classcode
+    </select>
+
+
+
+    <select id="getClasscodeCTName"  resultType="com.haitong.youcai.entity.KVStr">
+        SELECT cb.classcode k, ct.ctname v
+        FROM class_baseinfo cb INNER JOIN classteacher ct
+        WHERE cb.classteacherId=ct.ctid
+    </select>
+
+
+    <select id="getClassStates"  resultType="String">
+        SELECT stname FROM classstate
+    </select>
+
+
+    <select id="getCNameByClasscode"  resultType="String">
+        SELECT c.cname FROM class_baseinfo cb INNER JOIN center c
+        WHERE cb.classcode=#{arg0} AND cb.centerId = c.cid
+    </select>
+
+
+    <select id="getCoursePlanByClasscode"  resultType="com.haitong.youcai.entity.CoursePlanItem_Class">
+        SELECT * FROM class_courseplanitem
+        WHERE classcode=#{arg0}
+    </select>
+
+
+    <select id="getCourseNameByCourseId"  parameterType="int" resultType="String">
+        SELECT cname FROM course
+        WHERE cid=#{arg0}
+    </select>
+
+
+    <select id="getTeacherNameByTeacherId"  parameterType="int" resultType="String">
+        SELECT tname FROM teacher
+        WHERE tid=#{arg0}
+    </select>
+
+    <select id="getTrcodeCcodeByTrname"  parameterType="String" resultType="com.haitong.youcai.entity.KVStr">
+       SELECT CODE as k,classcode as v FROM baseinfo_trainee
+       WHERE trname LIKE CONCAT('%',#{arg0},'%')
+    </select>
+
+    <select id="getTrnameByCode"  parameterType="String" resultType="String">
+        SELECT trname FROM baseinfo_trainee
+        WHERE code=#{arg0}
+    </select>
+
+    <select id="getDirectionNameByClassCode"  parameterType="String" resultType="String">
+        SELECT d.dname FROM class_baseinfo c,direction d
+        WHERE c.directionId=d.did and c.classcode=#{arg0}
+    </select>
+
+    <select id="getSectionsByDid"  parameterType="int" resultType="String">
+        SELECT pstname FROM process_score_types
+        WHERE did=#{arg0}
+    </select>
+
+
+    <select id="getDirectionNameByCode"  parameterType="String" resultType="String">
+        SELECT d.dname as dname
+        FROM baseinfo_trainee b,direction d
+        WHERE b.code=#{arg0} and b.directionId=d.did
+    </select>
+
+
+
+
+    <!--                                                         按中心                                                        -->
+
+    <!--中心本科平均工资-->
+    <select id="getCenterBenAvgSalary" resultType="com.haitong.youcai.entity.FKV">
+        SELECT c.cname as k, AVG(pei.realSalary) AS v
+        FROM process_employ_interview pei, baseinfo_trainee bt,center c
+        WHERE pei.result="成功" AND bt.diploma LIKE "%本%"  AND pei.datetimee BETWEEN #{arg0} AND #{arg1} AND pei.code=bt.code AND bt.centerId=c.cid
+        GROUP BY c.cid
+    </select>
+
+    <!--所有中心本科平均工资-->
+    <select id="getAllCenterBenAvgSalary" resultType="int">
+        SELECT AVG(pei.realSalary)
+        FROM process_employ_interview pei, baseinfo_trainee bt
+        WHERE pei.result="成功" AND bt.diploma LIKE "%本%" AND pei.datetimee BETWEEN #{arg0} AND #{arg1} AND pei.code=bt.code
+    </select>
+
+    <!--中心专科平均工资-->
+    <select id="getCenterZhuanAvgSalary" resultType="com.haitong.youcai.entity.FKV">
+        SELECT c.cname as k, AVG(pei.realSalary) AS v
+        FROM process_employ_interview pei, baseinfo_trainee bt,center c
+        WHERE pei.result="成功" AND bt.diploma LIKE "%专%" AND pei.datetimee BETWEEN #{arg0} AND #{arg1} AND pei.code=bt.code AND bt.centerId=c.cid
+        GROUP BY c.cid
+    </select>
+    <!--所有中心专科平均工资-->
+    <select id="getAllCenterZhuanAvgSalary" resultType="int">
+        SELECT AVG(pei.realSalary)
+        FROM process_employ_interview pei, baseinfo_trainee bt
+        WHERE pei.result="成功" AND bt.diploma LIKE "%专%" AND pei.datetimee BETWEEN #{arg0} AND #{arg1} AND pei.code=bt.code
+    </select>
+
+    <!-- 中心面试次数-->
+    <select id="getCenterInterviewTimes" resultType="com.haitong.youcai.entity.KV">
+        SELECT c.cname as k, COUNT(*) AS v
+        FROM process_employ_interview pei, baseinfo_trainee bt, center c
+        WHERE  pei.datetimee BETWEEN #{arg0} and #{arg1} AND pei.code=bt.code AND bt.centerId=c.cid
+        GROUP BY c.cid
+    </select>
+    <!-- 所有中心面试次数-->
+    <select id="getAllCenterInterviewTimes" resultType="int">
+        SELECT COUNT(*)
+        FROM process_employ_interview pei
+        WHERE  pei.datetimee BETWEEN #{arg0} and #{arg1}
+    </select>
+
+    <!--#中心人数-->
+    <select id="getCenterTraineeNumbers" resultType="com.haitong.youcai.entity.KV">
+        SELECT c.cname as k, COUNT(*) AS v
+        FROM baseinfo_trainee bt,center c, class_baseinfo cb
+        WHERE cb.realExamGraducateDate BETWEEN #{arg0} AND #{arg1} AND bt.centerId=c.cid AND bt.classcode=cb.classcode
+        GROUP BY c.cid
+    </select>
+
+    <!--#所有中心进入就业期的人数-->
+    <select id="getAllCenterTraineeNumbers" resultType="int">
+       SELECT COUNT(*) FROM baseinfo_trainee WHERE classcode IN
+      (SELECT classcode FROM class_baseinfo WHERE realExamGraducateDate != '' AND realExamGraducateDate BETWEEN #{arg0} AND #{arg1})
+    </select>
+
+    <!--#每个学员的找工作周期-->
+    <select id="getTrcodePeriod" resultType="com.haitong.youcai.entity.KV">
+        SELECT code as k,DATEDIFF(MAX(datetimee), MIN(datetimee)) AS v  FROM process_employ_interview
+        WHERE datetimee BETWEEN #{arg0} and #{arg1} AND CODE IN (SELECT CODE FROM process_employ_interview WHERE result="成功")
+        GROUP BY CODE
+    </select>
+
+    <!--每个学员所在中心-->
+    <select id="listCodeCname" resultType="com.haitong.youcai.entity.KVStr">
+        SELECT pei.code as k, c.cname as v
+        FROM process_employ_interview pei, baseinfo_trainee bt, center c
+        WHERE pei.datetimee BETWEEN #{arg0} and #{arg1} AND pei.code=bt.code AND bt.centerId=c.cid
+    </select>
+
+
+
+    <!--每个中心找到开发岗位的人数-->
+    <select id="getCnameDevNumbers" resultType="com.haitong.youcai.entity.KV">
+        SELECT c.cname as k, COUNT(*) AS v
+        FROM process_employ_interview pei,baseinfo_trainee bt, center c
+        WHERE pei.datetimee BETWEEN #{arg0} AND #{arg1} AND pei.result="成功" AND pei.position LIKE CONCAT('%','开发','%') AND pei.code=bt.code AND bt.centerId=c.cid
+        GROUP BY c.cid
+    </select>
+
+    <!--每个中心找到工作的人数-->
+    <select id="getCnameWorkNumbers" resultType="com.haitong.youcai.entity.KV">
+        SELECT c.cname as k, COUNT(*) AS v
+        FROM process_employ_interview pei,baseinfo_trainee bt, center c
+        WHERE pei.datetimee BETWEEN #{arg0} AND #{arg1} AND pei.result="成功"  AND pei.code=bt.code AND bt.centerId=c.cid
+        GROUP BY c.cid
+    </select>
+
+
+    <!--                                                         按方向                                                        -->
+    <!--方向本科平均工资-->
+    <select id="getDirectionBenAvgSalary" resultType="com.haitong.youcai.entity.FKV">
+        SELECT d.dname AS k, AVG(pei.realSalary) AS v
+        FROM process_employ_interview pei, baseinfo_trainee bt,direction d
+        WHERE pei.result="成功" AND bt.diploma LIKE "%本%"  AND pei.datetimee BETWEEN #{arg0} AND #{arg1}
+        AND pei.code=bt.code AND bt.directionId=d.did
+        GROUP BY d.did
+    </select>
+
+    <!--方向专科平均工资-->
+    <select id="getDirectionZhuanAvgSalary" resultType="com.haitong.youcai.entity.FKV">
+        SELECT d.dname AS k, AVG(pei.realSalary) AS v
+        FROM process_employ_interview pei, baseinfo_trainee bt,direction d
+        WHERE pei.result="成功" AND bt.diploma LIKE "%专%"  AND pei.datetimee BETWEEN #{arg0} AND #{arg1}
+        AND pei.code=bt.code AND bt.directionId=d.did
+        GROUP BY d.did
+    </select>
+
+
+    <!-- 方向面试次数-->
+    <select id="getDirectionInterviewTimes" resultType="com.haitong.youcai.entity.KV">
+        SELECT d.dname as k, COUNT(*) AS v
+        FROM process_employ_interview pei, baseinfo_trainee bt, direction d
+        WHERE  pei.datetimee BETWEEN #{arg0} and #{arg1} AND pei.code=bt.code AND bt.directionId=d.did
+        GROUP BY d.did
+    </select>
+
+    <!--#方向人数-->
+    <select id="getDirectionTraineeNumbers" resultType="com.haitong.youcai.entity.KV">
+        SELECT d.dname as k, COUNT(*) AS v
+        FROM baseinfo_trainee bt,direction d
+        WHERE bt.directionId=d.did
+        GROUP BY d.did
+    </select>
+
+    <!--每个学员所在方向-->
+    <select id="listCodeDname" resultType="com.haitong.youcai.entity.KVStr">
+        SELECT pei.code as k, d.dname as v
+        FROM process_employ_interview pei, baseinfo_trainee bt, direction d
+        WHERE pei.datetimee BETWEEN #{arg0} and #{arg1} AND pei.code=bt.code AND bt.directionId=d.did
+    </select>
+
+
+    <!--每个方向找到开发岗位的人数-->
+    <select id="getDnameDevNumbers" resultType="com.haitong.youcai.entity.KV">
+        SELECT d.dname as k, COUNT(*) AS v
+        FROM process_employ_interview pei,baseinfo_trainee bt, direction d
+        WHERE pei.datetimee BETWEEN #{arg0} AND #{arg1} AND pei.result="成功" AND pei.position LIKE CONCAT('%','开发','%') AND pei.code=bt.code AND bt.directionId=d.did
+        GROUP BY d.did
+    </select>
+
+    <!--每个方向找到工作的人数-->
+    <select id="getDnameWorkNumbers" resultType="com.haitong.youcai.entity.KV">
+        SELECT d.dname as k, COUNT(*) AS v
+        FROM process_employ_interview pei,baseinfo_trainee bt, direction d
+        WHERE pei.datetimee BETWEEN #{arg0} AND #{arg1} AND pei.result="成功"  AND pei.code=bt.code AND bt.directionId=d.did
+        GROUP BY d.did
+    </select>
+
+
+
+
+    <!--                                                         按岗位 （开发和非开发）                                                       -->
+    <!--开发岗位本科平均工资-->
+    <select id="getDevBenAvgSalary" resultType="float">
+        SELECT AVG(pei.realSalary)
+        FROM process_employ_interview pei,baseinfo_trainee bt
+        WHERE pei.datetimee BETWEEN #{arg0} AND #{arg1} AND pei.result="成功" AND pei.position LIKE "%开发%" OR pei.position LIKE "%dev%"  AND bt.diploma LIKE "%本%" AND pei.code=bt.code
+    </select>
+
+    <!--开发岗位专科平均工资-->
+    <select id="getDevZhuanAvgSalary" resultType="float">
+        SELECT AVG(pei.realSalary)
+        FROM process_employ_interview pei,baseinfo_trainee bt
+        WHERE pei.datetimee BETWEEN #{arg0} AND #{arg1} AND pei.result="成功" AND pei.position LIKE "%开发%" OR pei.position LIKE "%dev%"  AND bt.diploma LIKE "%专%" AND pei.code=bt.code
+    </select>
+
+    <!--非开发岗位本科平均工资-->
+    <select id="getNotDevBenAvgSalary" resultType="float">
+        SELECT AVG(pei.realSalary)
+        FROM process_employ_interview pei,baseinfo_trainee bt
+        WHERE pei.datetimee BETWEEN #{arg0} AND #{arg1} AND pei.result="成功" AND pei.position NOT LIKE "%开发%" AND pei.position NOT LIKE "%dev%"  AND bt.diploma LIKE "%本%" AND pei.code=bt.code
+    </select>
+
+    <!--非开发岗位专科平均工资-->
+    <select id="getNotDevZhuanAvgSalary" resultType="float">
+        SELECT AVG(pei.realSalary)
+        FROM process_employ_interview pei,baseinfo_trainee bt
+        WHERE pei.datetimee BETWEEN #{arg0} AND #{arg1} AND pei.result="成功" AND pei.position NOT LIKE "%开发%" AND pei.position NOT LIKE "%dev%"  AND bt.diploma LIKE "%专%" AND pei.code=bt.code
+    </select>
+
+
+
+    <!--开发岗位面试次数-->
+    <select id="getDevInterviewTimes" resultType="float">
+        SELECT count(*)
+        FROM process_employ_interview
+        WHERE datetimee BETWEEN #{arg0} AND #{arg1}  AND position LIKE "%开发%" OR position LIKE "%dev%"
+    </select>
+    <!--开发岗位面试人数-->
+    <select id="getDevTraineeNumbers" resultType="float">
+       SELECT count(distinct code)
+        FROM process_employ_interview
+        WHERE datetimee BETWEEN #{arg0} AND #{arg1}  AND position LIKE "%开发%" OR position LIKE "%dev%"
+    </select>
+
+
+    <select id="getNotDevInterviewTimes" resultType="float">
+        SELECT count(*)
+        FROM process_employ_interview
+        WHERE datetimee BETWEEN #{arg0} AND #{arg1}  AND position NOT LIKE "%开发%" AND position NOT LIKE "%dev%"
+    </select>
+
+    <select id="getNotDevTraineeNumbers" resultType="float">
+        SELECT count(distinct code)
+        FROM process_employ_interview
+        WHERE datetimee BETWEEN #{arg0} AND #{arg1}  AND position NOT LIKE "%开发%" AND position NOT LIKE "%dev%"
+    </select>
+
+
+
+
+    <select id="getDevTrcodePeriod" resultType="float">
+        SELECT DATEDIFF(MAX(datetimee), MIN(datetimee)) FROM process_employ_interview
+        WHERE datetimee BETWEEN #{arg0} and #{arg1} AND position LIKE "%开发%" OR position LIKE "%dev%" AND CODE IN (SELECT CODE FROM process_employ_interview WHERE result="成功")
+        GROUP BY CODE
+    </select>
+
+    <select id="getNotDevTrcodePeriod" resultType="float">
+       SELECT DATEDIFF(MAX(datetimee), MIN(datetimee)) FROM process_employ_interview AS diff
+        WHERE datetimee BETWEEN #{arg0} and #{arg1} AND POSITION NOT LIKE "%开发%" AND POSITION NOT LIKE "%dev%" AND CODE IN (SELECT CODE FROM process_employ_interview WHERE result="成功")
+        GROUP BY CODE
+    </select>
+
+
+    <select id="getCTNameByClassCode" parameterType="string" resultType="string">
+        SELECT ct.ctname
+        FROM class_baseinfo cb,classteacher ct
+        WHERE cb.classcode=#{arg0} AND cb.classteacherId=ct.ctid
+    </select>
+
+
+
+    <select id="getClassNumbers"  resultType="com.haitong.youcai.entity.KV">
+        SELECT cb.classcode as k, count(bt.code) as v
+        FROM class_baseinfo cb,baseinfo_trainee bt
+        WHERE cb.classcode=bt.classcode
+        GROUP BY cb.classcode
+    </select>
+
+
+    <select id="mohuQueryByName"  parameterType="String" resultType="com.haitong.youcai.entity.BaseinfoForTrainee">
+        SELECT
+        bt.code as code,bt.classcode as classcode,bt.trname as name,bt.graduateSchool as graduateSchool, d.dname as dname
+        FROM baseinfo_trainee bt, direction d
+        WHERE trname LIKE CONCAT('%',#{arg0},'%') AND d.did=bt.directionId
+    </select>
+
+
+
+
+    <select id="getComprehensiveScoreByCode_java"  parameterType="String" resultMap="getComprehensivejavaMap">
+        SELECT
+        bt.id id, bt.code code, bt.trname trname,
+        cbt.type type, cbt.diploma diploma, cbt.graduatetime graduatetime,cbt.prefession prefession,
+        cbt.enery_employ enery_employ, cbt.corporation corporation, cbt.salary salary,
+        cj.java_basegrammer_check java_basegrammer_check, cj.java_oo_test java_oo_test,cj.java_datastruct_test java_datastruct_test,
+        cj.se_pro se_pro, cj.webpage_check webpage_check, cj.ssmh_check ssmh_check, cj.databs dbst,cj.ee_pro ee_pro
+        FROM baseinfo_trainee bt, comprehensivescore_baseinfo_trainee cbt, comprehensivescore_javaee cj
+        WHERE bt.code=#{arg0} AND bt.code=cbt.code AND cbt.code=cj.code
+    </select>
+
+    <!--List<ComprehensiveScore_ai> getComprehensiveScoreByClassCode_ai(String classcode);-->
+    <select id="getComprehensiveScoreByCode_ai"  parameterType="String" resultMap="getComprehensiveaiMap">
+        SELECT
+        bt.id id, bt.code code, bt.trname trname,
+        cbt.type type, cbt.diploma diploma, cbt.graduatetime graduatetime,cbt.prefession prefession,
+        cbt.enery_employ enery_employ, cbt.corporation corporation, cbt.salary salary,
+        ca.c_grammer_test c_grammer_test, ca.array_struct_test array_struct_test,ca.pointer_check pointer_check,ca.c_pro c_pro,
+        ca.lsd_test lsd_test, ca.cplusplus_oo_check cplusplus_oo_check, ca.qt_test qt_test, ca.cplusplus_pro cplusplus_pro,
+        ca.pro pro
+        FROM baseinfo_trainee bt, comprehensivescore_baseinfo_trainee cbt, comprehensivescore_ai ca
+        WHERE bt.code=#{arg0} AND bt.code=cbt.code AND cbt.code=ca.code
+    </select>
+
+
+
+
+
+
+    <update id="updateComprehensiveBaseinfo" parameterType="com.haitong.youcai.entity.ComprehensiveScore_baseinfo">
+        UPDATE  comprehensivescore_baseinfo_trainee set
+        diploma=#{diploma}, graduateTime=#{graduateTime},  prefession=#{prefession}, enery_employ=#{enery_employ},
+        database_java=#{database_java}, type=#{type}
+        where code = #{code}
+    </update>
+
+
+
+    <select id="selectFileName"  parameterType="string" resultType="com.haitong.youcai.entity.ExistFile">
+        SELECT *
+        FROM existfile
+        where name=#{arg0}
+    </select>
+
+
+    <insert id="insertFileName" parameterType="com.haitong.youcai.entity.ExistFile">
+        INSERT INTO existfile(name,timee) VALUES(#{name}, #{timee})
+    </insert>
+
+    <select id="getClassCodesByClid2"  parameterType="int" resultType="string">
+        SELECT classcode
+        FROM class_baseinfo
+        where clid=#{arg0}
+    </select>
+
+
+    <update id="updateTraineeReadingByClasscode" parameterType="string">
+        UPDATE  baseinfo_trainee set
+        state='在读'
+        where classcode = #{arg0} AND state="已结业"
+    </update>
+
+    <update id="updateTraineeEndClassByClasscode" parameterType="string">
+        UPDATE  baseinfo_trainee set
+        state='已结业'
+        where classcode = #{arg0} AND state="在读"
+    </update>
+
+    <update id="updateClassExamDate" >
+        UPDATE  class_baseinfo set
+        realExamGraducateDate=#{arg1}
+        where classcode = #{arg0}
+    </update>
+
+    <select id="getValidClassTeachers"   resultType="com.haitong.youcai.entity.ClassTeacher">
+        SELECT ctid,ctname
+        FROM classteacher
+        where state="在职"
+    </select>
+
+
+    <select id="getBeginDateByCode"   resultType="string">
+        SELECT cb.beginDate
+        FROM baseinfo_trainee bt, class_baseinfo cb
+        WHERE bt.code=#{arg0} AND bt.classcode=cb.classcode
+    </select>
+
+
+    <update id="updateTraineeClasscode" parameterType="string">
+        UPDATE  baseinfo_trainee set
+        classcode=#{arg1}
+        where code = #{arg0}
+    </update>
+
+
+    <insert id="saveArchiveForCodeClasscode" >
+        insert into initclasstrainee(code, classcode) values(#{arg0},#{arg1})
+    </insert>
+
+    <select id="getComprehensiveScoreIdByCode"  parameterType="String" resultType="Integer">
+        SELECT id FROM comprehensivescore_baseinfo_trainee WHERE code=#{arg0}
+    </select>
+
+
+
+    <select id="listClasscodeForBetweenTime"   resultType="String">
+        SELECT classcode FROM class_baseinfo
+        WHERE beginDate BETWEEN #{startTime} AND #{endTime}
+        ORDER by RIGHT(classcode, 4) DESC
+    </select>
+
+    <select id="getClassTeachersForBetweenTime"  resultType="com.haitong.youcai.entity.ClassTeacher">
+        select * from classteacher
+         WHERE hiredate BETWEEN #{startTime} AND #{endTime}
+    </select>
+
+    <select id="getClasscodeByTid"  resultType="String">
+        SELECT classcode FROM class_courseplanitem
+        WHERE teacherId=#{arg0}
+    </select>
+
+    <select id="getCenterListForBetweenTime" resultType="com.haitong.youcai.entity.Center">
+        select * from center
+         WHERE createTime BETWEEN #{startTime} AND #{endTime}
+    </select>
+
+
+    <select id="getClasscodeByDirectionIdTime" resultType="String">
+        select classcode from class_baseinfo
+        WHERE directionId=#{did} AND beginDate BETWEEN #{startTime} AND #{endTime}
+    </select>
+
+
+    <select id="getClassCodesByCenterIdTime" resultType="String">
+        select classcode from class_baseinfo
+        WHERE beginDate BETWEEN #{startTime} AND #{endTime}
+        <if test="cid gt 0"> centerIdd=#{cid}</if>
+
+    </select>
+
+    <select id="getCenterIdByClasscode" resultType="Integer">
+        select centerId from class_baseinfo
+        WHERE classcode=#{arg0}
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haitong.youcai.mapper.EmployMapper">
+
+    <select id="getEmployTypes" resultType="String">
+        SELECT itname FROM interview_types
+    </select>
+
+
+    <select id="listBaseinfoForTraineeByClassCode" resultType="com.haitong.youcai.entity.BaseinfoForTrainee">
+        SELECT code,trname name,gender,classcode,diploma,graducateTime,profession,graduateSchool
+        FROM baseinfo_trainee
+        WHERE classcode=#{arg0}
+    </select>
+
+
+
+
+    <select id="getBaseinfoForTraineeByCode" resultType="com.haitong.youcai.entity.BaseinfoForTrainee">
+        SELECT code,trname name,gender,classcode,diploma,graducateTime,profession,graduateSchool
+        FROM baseinfo_trainee
+        WHERE classcode=#{arg0} AND code=#{arg1}
+    </select>
+
+
+    <insert id="saveNewInterview" parameterType="com.haitong.youcai.entity.ProcessEmployInterview" useGeneratedKeys="true" keyProperty="peiid">
+        INSERT INTO process_employ_interview(code, classcode, datetimee, corporiation,position,type,salary,result,realSalary,fuli)
+        VALUES(#{code},#{classcode}, #{datetimee},#{corporiation}, #{position},#{type},#{salary},#{result},#{realSalary},#{fuli})
+    </insert>
+
+
+    <select id="listInterviewRecordByClassCode" resultType="com.haitong.youcai.entity.ProcessEmployInterviewRecord">
+        SELECT
+        br.code code, br.trname name, br.gender gender,br.classcode classcode,br.diploma diploma, br.graducateTime graducateTime,br.profession profession,br.graduateSchool graduateSchool,
+        pei.peiid peiid, pei.datetimee datetimee, pei.corporiation corporiation, pei.position position, pei.type type, pei.salary salary, pei.result result, pei.realSalary realSalary, pei.fuli fuli,pei.employProof employProof
+        FROM baseinfo_trainee br, process_employ_interview pei
+        WHERE pei.classcode=#{arg0} AND br.code=pei.code
+    </select>
+
+
+    <update id="updateInterviewRecord" parameterType="com.haitong.youcai.entity.ProcessEmployInterview">
+        UPDATE process_employ_interview SET
+        datetimee=#{datetimee},
+        entertimee=#{entertimee},
+        corporiation=#{corporiation},
+        position=#{position},
+        type=#{type},
+        salary=#{salary},
+        result=#{result},
+        realSalary=#{realSalary},
+        fuli=#{fuli},
+        employProof=#{employProof}
+        WHERE peiid=#{peiid}
+    </update>
+
+
+    <insert id="insertInterviewRecord" parameterType="com.haitong.youcai.entity.ProcessEmployInterview" useGeneratedKeys="true" keyProperty="peiid">
+        insert process_employ_interview(code,classcode,datetimee,entertimee,corporiation,position,type,salary,result,realSalary,fuli,employProof)
+        value(#{code}, #{classcode}, #{datetimee},#{entertimee},#{corporiation},#{position},#{type},#{salary},#{result},#{realSalary},#{fuli},#{employProof})
+    </insert>
+
+
+    <select id="listInterviewRecordByCondition" resultType="com.haitong.youcai.entity.ProcessEmployInterviewRecord">
+        SELECT
+        br.code code, br.trname name, br.gender gender,br.classcode classcode,br.diploma diploma, br.graducateTime graducateTime,br.profession profession,br.graduateSchool graduateSchool,
+        pei.peiid peiid, pei.datetimee datetimee, pei.entertimee entertimee, pei.corporiation corporiation, pei.position position, pei.type type, pei.salary salary, pei.result result, pei.realSalary realSalary, pei.fuli fuli,pei.employProof employProof
+        FROM baseinfo_trainee br left join  process_employ_interview pei on br.code=pei.code
+        WHERE
+        br.classcode=#{arg0}
+        <if test="arg1 != '全部' ">AND pei.type=#{arg1}</if>
+        <if test="arg2 != '全部' ">AND pei.result=#{arg2}</if>
+    </select>
+
+
+    <select id="listProcessEmployInterviewRecordByCode" resultType="com.haitong.youcai.entity.ProcessEmployInterviewRecord">
+        SELECT
+        br.code code, br.trname name, br.gender gender,br.classcode classcode,br.diploma diploma, br.graducateTime graducateTime,br.profession profession,br.graduateSchool graduateSchool,
+        pei.peiid peiid, pei.datetimee datetimee, pei.entertimee entertimee, pei.corporiation corporiation, pei.position position, pei.type type, pei.salary salary, pei.result result, pei.realSalary realSalary, pei.fuli fuli,pei.employProof employProof
+        FROM baseinfo_trainee br, process_employ_interview pei
+        WHERE
+        pei.code=#{arg0} AND br.code=pei.code
+    </select>
+
+    <select id="getInterviewRecordByPeiid" resultType="com.haitong.youcai.entity.ProcessEmployInterviewRecord">
+        SELECT
+        br.code code, br.trname name, br.gender gender,br.classcode classcode,br.diploma diploma, br.graducateTime graducateTime,br.profession profession,br.graduateSchool graduateSchool,
+        pei.peiid peiid, pei.datetimee datetimee, pei.entertimee entertimee, pei.corporiation corporiation, pei.position position, pei.type type, pei.salary salary, pei.result result, pei.realSalary realSalary, pei.fuli fuli,pei.employProof employProof
+        FROM baseinfo_trainee br, process_employ_interview pei
+        WHERE
+        pei.peiid=#{arg0} AND br.code=pei.code
+    </select>
+
+
+    <update id="updateInterviewEmployProof" >
+        UPDATE process_employ_interview SET
+        employProof=#{arg1}
+        WHERE peiid=#{arg0}
+    </update>
+
+
+    <select id="getPhotoNameByPeiid" parameterType="int" resultType="String">
+        SELECT employProof FROM process_employ_interview WHERE peiid=#{arg0}
+    </select>
+
+
+    <update id="updateEmployInfo" parameterType="com.haitong.youcai.entity.ProcessEmployInterview">
+        UPDATE employinfo_trainee SET
+        state=#{type},employ_time=#{datetimee},employ_unit=#{corporiation},employ_position=#{position},employ_salary=#{realSalary}
+        WHERE code=#{code}
+    </update>
+
+
+    <update id="updateTraineeState">
+        UPDATE baseinfo_trainee SET
+        state=#{type}
+        WHERE code=#{code}
+    </update>
+
+    <update id="updateComprehensiveBaseInfo" parameterType="com.haitong.youcai.entity.ProcessEmployInterview">
+        UPDATE comprehensivescore_baseinfo_trainee SET
+        corporation=#{corporiation},salary=#{realSalary}
+        WHERE code=#{code} AND #{result}="成功"
+    </update>
+
+
+
+    <select id="getImgurlByCode" parameterType="String" resultType="String">
+        SELECT employProof FROM process_employ_interview WHERE code=#{arg0} AND result="成功"
+    </select>
+
+    <select id="getImgurlByPeiid" parameterType="int" resultType="String">
+        SELECT employProof FROM process_employ_interview WHERE peiid=#{arg0} AND result="成功"
+    </select>
+
+    <select id="listInterviewRecordByName" parameterType="String" resultType="com.haitong.youcai.entity.ProcessEmployInterviewRecord">
+        SELECT
+        br.code code, br.trname name, br.gender gender,br.classcode classcode,br.diploma diploma, br.graducateTime graducateTime,br.profession profession,br.graduateSchool graduateSchool,
+        pei.peiid peiid, pei.datetimee datetimee, pei.corporiation corporiation, pei.position position, pei.type type, pei.salary salary, pei.result result, pei.realSalary realSalary, pei.fuli fuli,pei.employProof employProof
+        FROM baseinfo_trainee br left join  process_employ_interview pei on br.code=pei.code
+        WHERE
+        br.trname LIKE CONCAT('%', #{arg0}, '%')
+    </select>
+
+
+    <update id="saveInterviewEmployProof" >
+        update  process_employ_interview
+        set employProof=#{arg1}
+        WHERE code=#{arg0} AND result="成功"
+    </update>
+
+    <select id="listInterviewRecordBydateSection" parameterType="String" resultType="com.haitong.youcai.entity.ProcessEmployInterviewRecord">
+        SELECT pei.*,c.cname as cname
+        FROM process_employ_interview pei, baseinfo_trainee bt,center c
+        WHERE pei.datetimee BETWEEN #{arg0} AND #{arg1} AND pei.code=bt.code AND bt.centerId=c.cid
+    </select>
+
+    <delete id="deleteInterViewRecordByPeiid" parameterType="int" >
+        DELETE FROM process_employ_interview
+        WHERE peiid=#{arg0}
+    </delete>
+
+    <delete id="deleteScoreByTid" parameterType="int" >
+        DELETE FROM process_score_items
+        WHERE tid=#{arg0}
+    </delete>
+
+
+    <select id="getcodeNameByTid" parameterType="int" resultType="com.haitong.youcai.entity.KVStr">
+        SELECT psi.code as k, bt.trname as v
+        FROM process_score_items psi,baseinfo_trainee bt
+        WHERE psi.code=bt.code AND psi.tid=#{arg0}
+    </select>
+
+
+    <select id="getScoreByTid" parameterType="int" resultType="com.haitong.youcai.entity.Score">
+        SELECT *
+        FROM process_score_items
+        WHERE tid=#{arg0}
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

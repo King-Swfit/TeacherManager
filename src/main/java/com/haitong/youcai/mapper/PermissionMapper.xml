@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haitong.youcai.mapper.PermissionMapper">
+    <select id="listByRoleId" parameterType="int" resultType="com.haitong.youcai.entity.Permission">
+        select id,url, roleId,permission from permissions WHERE roleId=#{arg0}
+    </select>
+
+    <select id="selectByName" parameterType="string" resultType="com.haitong.youcai.entity.Role">
+        select id,rname from role WHERE rname=#{arg0}
+    </select>
+
+</mapper>
