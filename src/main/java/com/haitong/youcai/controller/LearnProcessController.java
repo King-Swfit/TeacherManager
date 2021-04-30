@@ -614,6 +614,7 @@ public class LearnProcessController {
         List<String> sections = classService.getSectionsByDid(did);
 
         List<Score> scores = learnProdurceService.getScoreDetailByCode(code);
+
         if(scores != null && scores.size() > 0){
             for(Score score:scores){
                 for(String section:sections){
