@@ -8,6 +8,7 @@ import com.haitong.youcai.service.JiaoWuService;
 import com.haitong.youcai.service.LearnProdurceService;
 import com.haitong.youcai.utils.ExcelUtil;
 import com.haitong.youcai.utils.Tool;
+import jdk.nashorn.internal.runtime.options.Options;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -225,15 +226,14 @@ public class ClassController {
         baseInfo_class.setClassteacherId(ctid);
         baseInfo_class.setBeginDate(classTime);
 
-        baseInfo_class.setPreExamGraducateDate(graduateExamDate);
-        baseInfo_class.setRealGraducateDate(graduateDate);
+        baseInfo_class.setPreExamGraducateDate("".equals(graduateExamDate)?null:graduateExamDate);
+        baseInfo_class.setRealGraducateDate("".equals(graduateDate)?null:graduateDate);
 
 
         List<CoursePlanItem_Class> coursePlanItems = new ArrayList<>();
         String courseItems_strs = jsonObject.get("courseItems").toString();
         JSONArray jsonArray = JSONArray.parseArray(courseItems_strs);
         for (int i = 0; i < jsonArray.size(); i++) {
-
             CoursePlanItem_Class coursePlanItem = new CoursePlanItem_Class();
             coursePlanItem.setClasscode(classcode);
 
@@ -254,7 +254,6 @@ public class ClassController {
             coursePlanItems.add(coursePlanItem);
 
         }
-
         boolean isSuccess = classService.insertNewClass(baseInfo_class, coursePlanItems);
         if (isSuccess) {
             return "create success";

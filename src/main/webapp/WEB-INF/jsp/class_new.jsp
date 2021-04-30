@@ -223,7 +223,6 @@
                     function (data) {
                         alert(data);
                     });
-
         }
 
     </script>
@@ -421,7 +420,7 @@
                                         <td style="text-align:right;"> <button type="button" class="btn btn-primary" onclick="onCreateClassNb()" style="min-width: 150px">生成班级编号</button></td>
 
                                         <td style="text-align:right;">班级编号:</td>
-                                        <td> <input placeholder="点击按钮自动生成" id="classNb" class = "form-control"  readonly="true" style="width: 150px"/></td>
+                                        <td> <input placeholder="点击按钮自动生成" id="classNb" class = "form-control"  readonly="false" style="width: 150px"/></td>
                                     </tr>
                                 </table>
                             </div>

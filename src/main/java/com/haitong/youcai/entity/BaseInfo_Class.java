@@ -113,4 +113,22 @@ public class BaseInfo_Class {
     public void setInitPfx(int initPfx) {
         this.initPfx = initPfx;
     }
+
+    @Override
+    public String toString() {
+        return "BaseInfo_Class{" +
+                "clid=" + clid +
+                ", classcode='" + classcode + '\'' +
+                ", directionId=" + directionId +
+                ", centerId=" + centerId +
+                ", classteacherId=" + classteacherId +
+                ", beginDate='" + beginDate + '\'' +
+                ", preExamGraducateDate='" + preExamGraducateDate + '\'' +
+                ", preGraducateDate='" + preGraducateDate + '\'' +
+                ", realExamGraducateDate='" + realExamGraducateDate + '\'' +
+                ", realGraducateDate='" + realGraducateDate + '\'' +
+                ", state='" + state + '\'' +
+                ", initPfx=" + initPfx +
+                '}';
+    }
 }

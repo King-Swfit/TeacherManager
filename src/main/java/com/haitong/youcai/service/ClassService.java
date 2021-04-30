@@ -53,7 +53,7 @@ public class ClassService {
     public boolean insertNewClass(BaseInfo_Class baseInfo_class, List<CoursePlanItem_Class> coursePlanItems) {
         boolean isSuccess = false;
         int result = classMapper.insertBaseInfos(baseInfo_class);
-        if(result > 0){
+        if(result > 0 && coursePlanItems!=null && !coursePlanItems.isEmpty()){
             classMapper.insertCoursePlanItems(coursePlanItems);
             isSuccess = true;
         }

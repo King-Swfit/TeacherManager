@@ -126,4 +126,23 @@ public class CoursePlanItem_Class {
     public void setTeachers(List<SimpleTeacher> teachers) {
         this.teachers = teachers;
     }
+
+    @Override
+    public String toString() {
+        return "CoursePlanItem_Class{" +
+                "ciiid=" + ciiid +
+                ", classcode='" + classcode + '\'' +
+                ", courseId=" + courseId +
+                ", teacherId=" + teacherId +
+                ", cname='" + cname + '\'' +
+                ", tname='" + tname + '\'' +
+                ", preBeginDate='" + preBeginDate + '\'' +
+                ", preEndDate='" + preEndDate + '\'' +
+                ", preProEndDate='" + preProEndDate + '\'' +
+                ", realBeginDate='" + realBeginDate + '\'' +
+                ", realEndDate='" + realEndDate + '\'' +
+                ", realProEndDate='" + realProEndDate + '\'' +
+                ", teachers=" + teachers +
+                '}';
+    }
 }
