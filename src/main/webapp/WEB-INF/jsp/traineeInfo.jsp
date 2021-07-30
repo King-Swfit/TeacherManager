@@ -550,7 +550,7 @@
                                 <tr>
                                     <td style="text-align:left;">1、请输入您要查询的学员名(支持模糊查询)</td>
                                     <td>
-                                        <input  id="name_search" class = "form-control" placeholder = "学员名字" style="min-width: 150px;display: inline">
+                                        <input  id="name_search" class = "form-control" placeholder = "学员名字/学号" style="min-width: 150px;display: inline">
                                     </td>
                                     <td><button type="button" class="btn btn-primary"  onclick="mohuquery()" style="min-width: 150px;display: inline">模糊查询</button></td>
 

@@ -323,9 +323,14 @@ public class LearnProdurceService {
         return learnProducerMapper.getAttenceOriginalsByName(name);
     }
 
+    public List<ProcessAttenceOriginal> getAttenceOriginalsByCode(String code) {
+        return learnProducerMapper.getAttenceOriginalsByCode(code);
+    }
+
     public List<ProcessAttenceDay> getAttenceDaysByName(String name) {
         return learnProducerMapper.getAttenceDaysByName(name);
     }
+
 
     public List<KVStr> getCodeNameInAtteceDays(String name) {
         return learnProducerMapper.getCodeNameInAtteceDays(name);
@@ -337,6 +342,10 @@ public class LearnProdurceService {
 
     public List<ProcessAttenceMSummary> getAttenceSummarysByName(String name) {
         return learnProducerMapper.getAttenceSummarysByName(name);
+    }
+
+    public List<ProcessAttenceMSummary> getAttenceSummarysByCode(String code) {
+        return learnProducerMapper.getAttenceSummarysByCode(code);
     }
 
     public List<ProcessAttenceDay> getAttenceDaysByCode(String code) {

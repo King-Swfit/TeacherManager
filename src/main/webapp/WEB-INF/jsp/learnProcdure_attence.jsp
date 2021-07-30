@@ -557,14 +557,24 @@
                 alert("请输入要查询的用户名!")
                 return
             }
-
-            $.post(
+            var startChar = name.substr(0,3).toUpperCase().charAt(0);
+            if (startChar >= 'A' && startChar <= 'Z') {
+                $.post(
+                    "/procedure/getAttenceDaysByCode",
+                    {"code":name},
+                    function (processAttenceDays) {
+                        showAttenceDays(processAttenceDays)
+                    }
+                );
+            } else {
+                $.post(
                     "/procedure/getAttenceDaysByName",
                     {"name":name},
                     function (processAttenceDays) {
                         showAttenceDays(processAttenceDays)
                     }
-            );
+                );
+            }
         }
 
 
@@ -630,13 +640,24 @@
                 return
             }
 
-            $.post(
+            var startChar = name.substr(0,3).toUpperCase().charAt(0);
+            if (startChar >= 'A' && startChar <= 'Z') {
+                $.post(
+                    "/procedure/getAttenceSummaryByCode",
+                    {"code":name},
+                    function (processAttenceSummarys) {
+                        showAttenceSummarys(processAttenceSummarys,null)
+                    }
+                );
+            } else {
+                $.post(
                     "/procedure/getAttenceSummaryByName",
                     {"name":name},
                     function (processAttenceSummarys) {
                         showAttenceSummarys(processAttenceSummarys,null)
                     }
-            );
+                );
+            }
         }
 
 
@@ -872,7 +893,7 @@
                                                     <tr>
 
                                                         <td>
-                                                            &emsp; &emsp; <input  id="name_search" class = "form-control" placeholder = "学员名字" style="width: 150px;display: inline;">
+                                                            &emsp; &emsp; <input  id="name_search" class = "form-control" placeholder = "学员名字/学号" style="width: 150px;display: inline;">
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -987,7 +1008,7 @@
                                                     <tr>
 
                                                         <td>
-                                                            &emsp; &emsp; <input  id="name_search2" class = "form-control" placeholder = "学员名字" style="width: 150px;display: inline;">
+                                                            &emsp; &emsp; <input  id="name_search2" class = "form-control" placeholder = "学员名字/学号" style="width: 150px;display: inline;">
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -1097,7 +1118,7 @@
                                                         <tr>
 
                                                             <td>
-                                                                &emsp; &emsp; <input  id="name_search3" class = "form-control" placeholder = "学员名字" style="width: 150px;display: inline;">
+                                                                &emsp; &emsp; <input  id="name_search3" class = "form-control" placeholder = "学员名字/学号" style="width: 150px;display: inline;">
                                                             </td>
                                                         </tr>
                                                         <tr>

@@ -89,7 +89,7 @@ public class ClassService {
         List<String> list = null;
 
         if(0 != ctid){
-            if(state.equals("全部")){
+            if("全部".equals(state)){
                 list = classMapper.getClassCodesByCtid(ctid);
             }else{
                 list = classMapper.getClassCodesByCtidState(ctid, state);
@@ -101,9 +101,7 @@ public class ClassService {
     }
 
     public List<String> getClassCodesByClid(int ctid) {
-        List<String> list = classMapper.getClassCodesByCtid(ctid);
-
-        return list;
+        return classMapper.getClassCodesByCtid(ctid);
     }
 
     public List<BaseinfoForTrainee> getTrainBaseInfo(String classcode, String traineestate) {
@@ -147,7 +145,7 @@ public class ClassService {
                 classMapper.insertBaseInfos(baseInfo_class);//创建班级
             }
 
-            String tmp = null;
+            String tmp;
             //插入学员表
             for(int i = 1; i < datas.size(); i++){
 
@@ -364,7 +362,7 @@ public class ClassService {
 
             //对之前存在学员的存在。处理方案：不再插入。只根据情况更改班级编号
             Iterator<BaseinfoForTrainee> it = baseinfoForTrainees.iterator();
-            String code = null;
+            String code;
             while(it.hasNext()){
                 BaseinfoForTrainee baseinfoForTrainee = it.next();
                 classcode = baseinfoForTrainee.getClasscode();
@@ -388,7 +386,7 @@ public class ClassService {
 
             }
 
-            String tmpCode = null;
+            String tmpCode;
             Integer id;
             for(int i = 0; i < employInfoForTrainees.size(); i++){
                 EmployInfoForTrainee employInfoForTrainee = employInfoForTrainees.get(i);
@@ -424,7 +422,7 @@ public class ClassService {
            classMapper.insertBaseInfos_batchTrainee_one(baseinfoForTrainee);
         }
 
-        String code = null;
+        String code;
         Integer id;
         code = employInfoForTrainee.getCode();
         if(code != null && code.length() > 0){
@@ -792,6 +790,10 @@ public class ClassService {
         return classMapper.getTrcodeCcodeByTrname(name);
     }
 
+    public List<KVStr> getTrcodeCcodeByCode(String code) {
+        return classMapper.getTrcodeCcodeByCode(code);
+    }
+
     public String getTrnameByCode(String code) {
         return classMapper.getTrnameByCode(code);
     }
@@ -923,6 +925,10 @@ public class ClassService {
         return classMapper.mohuQueryByName(name);
     }
 
+    public List<BaseinfoForTrainee> mohuQueryByCode(String code) {
+        return classMapper.mohuQueryByCode(code);
+    }
+
     public List<ComprehensiveScore_java> getComprehensiveScoreByCode_java(String code) {
         return classMapper.getComprehensiveScoreByCode_java(code);
     }
@@ -957,9 +963,9 @@ public class ClassService {
     }
 
     public void updateTraineeStateByClasscode(String classcode, String state) {
-        if(state.equals("在读")){
+        if("在读".equals(state)){
             classMapper.updateTraineeReadingByClasscode(classcode);
-        }else if(state.equals("已结班")){
+        }else if("已结班".equals(state)){
             classMapper.updateTraineeEndClassByClasscode(classcode);
         }
     }

@@ -319,7 +319,6 @@ public class ClassController {
         List<ClassGeneralInfo> generalInfos = classService.getClassGeneralInfoByCondition2(classQueryCondition);
         generalInfos = getMoreInfoToGeneralInfos(generalInfos);
 
-
         jsonObject.put("generalInfos",generalInfos);
 
         List<String> classstates = classService.listClassStates();
@@ -920,8 +919,14 @@ public class ClassController {
     @RequestMapping(value = "/mohuQueryByName", method = RequestMethod.POST)
     @ResponseBody
     public List<BaseinfoForTrainee> mohuQueryByName(String name){
-        List<BaseinfoForTrainee> baseinfoForTrainees = classService.mohuQueryByName(name);
-
+        // 判断如果上传的是学号就按照学号查询
+        List<BaseinfoForTrainee> baseinfoForTrainees;
+        if (name.startsWith("P") || name.startsWith("X") || name.startsWith("Z")) {
+            baseinfoForTrainees = classService.mohuQueryByCode(name);
+        } else {
+            baseinfoForTrainees = classService.mohuQueryByName(name);
+        }
+        baseinfoForTrainees.forEach(System.out::println);
         return baseinfoForTrainees;
     }
 

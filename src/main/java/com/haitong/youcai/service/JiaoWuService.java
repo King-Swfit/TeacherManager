@@ -386,6 +386,10 @@ public class JiaoWuService {
         return jiaoWuMapper.getXuejiByName(name);
     }
 
+    public List<Xueji> getXuejiByCode(String code) {
+        return jiaoWuMapper.getXuejiByCode(code);
+    }
+
     public List<Xueji> getSwitchXuejiDetail(String classcode) {
         return jiaoWuMapper.getSwitchXuejiDetail(classcode);
     }

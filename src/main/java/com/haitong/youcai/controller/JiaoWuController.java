@@ -552,9 +552,14 @@ public class JiaoWuController {
     public JSONObject getXuejiByName(String  name){
 
         JSONObject jsonObject = new JSONObject();
+        List<Xueji> xuejis;
 
-       // List<Xueji> xuejis = jiaoWuService.getXuejiDetail(classcode);
-        List<Xueji> xuejis = jiaoWuService.getXuejiByName(name);
+        // List<Xueji> xuejis = jiaoWuService.getXuejiDetail(classcode);
+        if (name.substring(0,3).toUpperCase().charAt(0) >= 'A' && name.substring(0,3).toUpperCase().charAt(0) <= 'Z') {
+            xuejis = jiaoWuService.getXuejiByCode(name);
+        } else {
+            xuejis = jiaoWuService.getXuejiByName(name);
+        }
 
         jsonObject.put("xuejis", xuejis);
 

@@ -1046,6 +1046,11 @@
        WHERE trname LIKE CONCAT('%',#{arg0},'%')
     </select>
 
+    <select id="getTrcodeCcodeByCode"  parameterType="String" resultType="com.haitong.youcai.entity.KVStr">
+        SELECT CODE as k,classcode as v FROM baseinfo_trainee
+        WHERE code LIKE CONCAT(#{arg0},'%')
+    </select>
+
     <select id="getTrnameByCode"  parameterType="String" resultType="String">
         SELECT trname FROM baseinfo_trainee
         WHERE code=#{arg0}
@@ -1323,6 +1328,12 @@
     </select>
 
 
+    <select id="mohuQueryByCode"  parameterType="String" resultType="com.haitong.youcai.entity.BaseinfoForTrainee">
+        SELECT
+            bt.code as code,bt.classcode as classcode,bt.trname as name,bt.graduateSchool as graduateSchool, d.dname as dname
+        FROM baseinfo_trainee bt, direction d
+        WHERE code LIKE CONCAT(#{arg0},'%') AND d.did=bt.directionId
+    </select>
 
 
     <select id="getComprehensiveScoreByCode_java"  parameterType="String" resultMap="getComprehensivejavaMap">

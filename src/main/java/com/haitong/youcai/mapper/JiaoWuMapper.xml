@@ -379,6 +379,12 @@
         WHERE  bt.trname LIKE CONCAT('%',#{arg0},'%')  AND xj.code=bt.code
     </select>
 
+    <select id="getXuejiByCode" parameterType="String" resultType="com.haitong.youcai.entity.Xueji">
+        select xj.id id, xj.code code, xj.classcode classcode,xj.typee type, xj.content content, xj.reason reason, xj.result result, xj.timee timee,xj.imgProof imgProof, xj.targetClasscode targetClasscode, bt.trname name
+        from xueji xj,baseinfo_trainee bt
+        WHERE  bt.code LIKE CONCAT(#{arg0},'%')  AND xj.code=bt.code
+    </select>
+
     <select id="getCenterByCenterId" parameterType="int" resultType="com.haitong.youcai.entity.Center">
         select * from center WHERE cid=#{arg0}
     </select>

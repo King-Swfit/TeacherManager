@@ -211,6 +211,8 @@ public interface ClassMapper {
 
     List<KVStr> getTrcodeCcodeByTrname(String name);
 
+    List<KVStr> getTrcodeCcodeByCode(String code);
+
     String getTrnameByCode(String code);
 
     String getDirectionNameByClassCode(String classcode);
@@ -275,6 +277,8 @@ public interface ClassMapper {
     List<KV> getClassNumbers();
 
     List<BaseinfoForTrainee> mohuQueryByName(String name);
+
+    List<BaseinfoForTrainee> mohuQueryByCode(String code);
 
     List<ComprehensiveScore_java> getComprehensiveScoreByCode_java(String code);
 

@@ -160,6 +160,8 @@ public interface JiaoWuMapper {
 
     List<Xueji> getXuejiByName(String name);
 
+    List<Xueji> getXuejiByCode(String code);
+
     void updateTraineeClasscode(String code, String classcode);
 
     void updateScoreClasscode(String code, String classcode);

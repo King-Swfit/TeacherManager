@@ -38,6 +38,8 @@ public interface EmployMapper {
 
     List<ProcessEmployInterviewRecord> listInterviewRecordByName(String name);
 
+    List<ProcessEmployInterviewRecord> listInterviewRecordByCode(String code);
+
     int saveInterviewEmployProof(String code, String employProof);
 
     int updateComprehensiveBaseInfo(ProcessEmployInterview processEmployInterview);

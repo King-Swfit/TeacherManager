@@ -95,6 +95,8 @@ public interface LearnProducerMapper {
 
     List<ProcessAttenceOriginal> getAttenceOriginalsByName(String name);
 
+    List<ProcessAttenceOriginal> getAttenceOriginalsByCode(String code);
+
     List<ProcessAttenceDay> getAttenceDaysByName(String name);
 
     List<KVStr> getCodeNameInAtteceDays(String name);
@@ -102,6 +104,8 @@ public interface LearnProducerMapper {
     List<String> getDatesByCode(String code);
 
     List<ProcessAttenceMSummary> getAttenceSummarysByName(String name);
+
+    List<ProcessAttenceMSummary> getAttenceSummarysByCode(String code);
 
     List<ProcessAttenceDay> getAttenceDaysByCode(String code);
 

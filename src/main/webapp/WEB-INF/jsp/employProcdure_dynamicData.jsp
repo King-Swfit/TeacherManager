@@ -1637,7 +1637,7 @@
                                             <tr>
 
                                                 <td>
-                                                    &emsp; &emsp; <input  id="name_search" class = "form-control" placeholder = "学员名字" style="width: 150px;display: inline;">
+                                                    &emsp; &emsp; <input  id="name_search" class = "form-control" placeholder = "学员名字/学号" style="width: 150px;display: inline;">
                                                 </td>
                                             </tr>
                                             <tr>

@@ -91,6 +91,10 @@ public class EmployService {
         return employMapper.listInterviewRecordByName(name);
     }
 
+    public List<ProcessEmployInterviewRecord> listInterviewRecordByCode(String code) {
+        return employMapper.listInterviewRecordByCode(code);
+    }
+
     public int saveInterviewEmployProof(String code, String employProof) {
         return employMapper.saveInterviewEmployProof(code, employProof);
     }

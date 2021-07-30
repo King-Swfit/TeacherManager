@@ -169,7 +169,12 @@ public class LearnProcessController {
         List<SimpleTalkCount> simpleTalkCounts = new ArrayList<>();
 
         List<KVStr> classcodeCtname = classService.getClasscodeCTName();//班级编号和班主任名字
-        List<KVStr> trCodes = classService.getTrcodeCcodeByTrname(name);//学员编号和班级编号
+        List<KVStr> trCodes;
+        if (name.substring(0,3).toUpperCase().charAt(0) >= 'A' && name.substring(0,3).toUpperCase().charAt(0) <= 'Z') {
+            trCodes = classService.getTrcodeCcodeByCode(name);
+        } else {
+            trCodes = classService.getTrcodeCcodeByTrname(name);//学员编号和班级编号
+        }
         if(trCodes != null){
             for(KVStr codeclasscode:trCodes){
                 String classcode = codeclasscode.getV();
@@ -177,6 +182,7 @@ public class LearnProcessController {
 
                 String code = codeclasscode.getK();
                 SimpleTalkCount simpleTalkCount = learnProdurceService.getTalkCountByCode(code);
+                simpleTalkCount.setCode(code);
                 simpleTalkCount.setCtname(ctname);
                 simpleTalkCount.setClasscode(classcode);
 
@@ -668,9 +674,13 @@ public class LearnProcessController {
     public List<SimpleScoreCount> getScoreCountByName(String name){
 
         List<SimpleScoreCount> simpleScoreCounts = new ArrayList<>();
-
+        List<KVStr> trCodes;
         List<KVStr> classcodeCtname = classService.getClasscodeCTName();//班级编号和班主任名字
-        List<KVStr> trCodes = classService.getTrcodeCcodeByTrname(name);//学员编号和班级编号
+        if (name.substring(0,3).toUpperCase().charAt(0) >= 'A' && name.substring(0,3).toUpperCase().charAt(0) <= 'Z') {
+            trCodes = classService.getTrcodeCcodeByCode(name);
+        } else {
+            trCodes = classService.getTrcodeCcodeByTrname(name);
+        }
         if(trCodes != null){
             for(KVStr codeclasscode:trCodes){
                 String classcode = codeclasscode.getV();
@@ -678,6 +688,7 @@ public class LearnProcessController {
 
                 String code = codeclasscode.getK();
                 SimpleScoreCount simpleScoreCount = learnProdurceService.getScoreCountByCode(code);
+                simpleScoreCount.setCode(code);
                 simpleScoreCount.setCtname(ctname);
                 simpleScoreCount.setClasscode(classcode);
 
@@ -688,8 +699,6 @@ public class LearnProcessController {
 
             }
         }
-
-
         return simpleScoreCounts;
     }
 
@@ -802,8 +811,13 @@ public class LearnProcessController {
     @ResponseBody
     public List<ProcessAttenceOriginal> getAttenceOriginalsByName(String name){
 
-        List<ProcessAttenceOriginal> processAttenceOriginals = learnProdurceService.getAttenceOriginalsByName(name);
+        List<ProcessAttenceOriginal> processAttenceOriginals;
 
+        if (name.substring(0,3).toUpperCase().charAt(0) >= 'A' && name.substring(0,3).toUpperCase().charAt(0) <= 'Z') {
+            processAttenceOriginals = learnProdurceService.getAttenceOriginalsByCode(name);
+        } else {
+            processAttenceOriginals = learnProdurceService.getAttenceOriginalsByName(name);
+        }
         return processAttenceOriginals;
     }
 
@@ -828,6 +842,7 @@ public class LearnProcessController {
 
         return processAttenceDays;
     }
+
 
     @RequestMapping(value = "/getAttenceDaysByCode")
     @ResponseBody
@@ -855,6 +870,15 @@ public class LearnProcessController {
     @ResponseBody
     public List<ProcessAttenceMSummary> getAttenceSummaryByName(String name){
         List<ProcessAttenceMSummary> processAttenceMSummaries = learnProdurceService.getAttenceSummarysByName(name);
+
+        return processAttenceMSummaries;
+    }
+
+
+    @RequestMapping(value = "/getAttenceSummaryByCode")
+    @ResponseBody
+    public List<ProcessAttenceMSummary> getAttenceSummaryByCode(String code){
+        List<ProcessAttenceMSummary> processAttenceMSummaries = learnProdurceService.getAttenceSummarysByCode(code);
 
         return processAttenceMSummaries;
     }

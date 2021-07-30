@@ -418,13 +418,18 @@
     </select>
 
 
+    <select id="getAttenceOriginalsByCode"  resultType="com.haitong.youcai.entity.ProcessAttenceOriginal">
+        select * from process_attence_original WHERE code LIKE  CONCAT(#{arg0}, '%')
+    </select>
+
+
     <select id="getAttenceDaysByName"  parameterType="String" resultType="com.haitong.youcai.entity.ProcessAttenceDay">
         select * from process_attence_day WHERE name LIKE  CONCAT('%', #{arg0}, '%')
     </select>
 
 
     <select id="getAttenceDaysByCode"  parameterType="String" resultType="com.haitong.youcai.entity.ProcessAttenceDay">
-        select * from process_attence_day WHERE code=#{arg0}
+        select * from process_attence_day WHERE code LIKE CONCAT(#{arg0},'%')
     </select>
 
 
@@ -445,6 +450,15 @@
         SUM(lacks_1) lackClicks_1, SUM(lacks_2) lackClicks_2, SUM(absents) absentDays, SUM(free_thing) absent_things, SUM(free_ill) absent_ills
         from process_attence_day
         WHERE name LIKE CONCAT('%', #{arg0}, '%')
+        group by code, LEFT(datee,7)
+    </select>
+
+    <select id="getAttenceSummarysByCode"  resultType="com.haitong.youcai.entity.ProcessAttenceMSummary">
+        select code,name,classcode, LEFT(datee,7) as month,
+            SUM(attence) days, SUM(lates) lates,SUM(lateTime) lateTimes,SUM(earlyLefts) earlyLefts, SUM(earlyLeftTime) earlyLeftTimes,
+            SUM(lacks_1) lackClicks_1, SUM(lacks_2) lackClicks_2, SUM(absents) absentDays, SUM(free_thing) absent_things, SUM(free_ill) absent_ills
+        from process_attence_day
+        WHERE code LIKE CONCAT(#{arg0}, '%')
         group by code, LEFT(datee,7)
     </select>
 

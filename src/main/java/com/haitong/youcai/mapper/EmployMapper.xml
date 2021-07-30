@@ -141,6 +141,15 @@
         br.trname LIKE CONCAT('%', #{arg0}, '%')
     </select>
 
+    <select id="listInterviewRecordByCode" parameterType="String" resultType="com.haitong.youcai.entity.ProcessEmployInterviewRecord">
+        SELECT
+            br.code code, br.trname name, br.gender gender,br.classcode classcode,br.diploma diploma, br.graducateTime graducateTime,br.profession profession,br.graduateSchool graduateSchool,
+            pei.peiid peiid, pei.datetimee datetimee, pei.corporiation corporiation, pei.position position, pei.type type, pei.salary salary, pei.result result, pei.realSalary realSalary, pei.fuli fuli,pei.employProof employProof
+        FROM baseinfo_trainee br left join  process_employ_interview pei on br.code=pei.code
+        WHERE
+            br.code LIKE CONCAT(#{arg0}, '%')
+    </select>
+
 
     <update id="saveInterviewEmployProof" >
         update  process_employ_interview

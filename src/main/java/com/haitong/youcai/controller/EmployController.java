@@ -281,7 +281,15 @@ public class EmployController {
     private List<ProcessEmployInterviewRecord> listProcessEmployInterviewRecordByName(String name) {
 
         //所有的面试记录
-        List<ProcessEmployInterviewRecord> processEmployInterviewRecords = employService.listInterviewRecordByName(name);
+
+        List<ProcessEmployInterviewRecord> processEmployInterviewRecords;
+
+        if (name.substring(0,3).toUpperCase().charAt(0) >= 'A' && name.substring(0,3).toUpperCase().charAt(0) <= 'Z') {
+            processEmployInterviewRecords  = employService.listInterviewRecordByCode(name);
+        } else {
+            processEmployInterviewRecords  = employService.listInterviewRecordByName(name);
+        }
+
         if(processEmployInterviewRecords != null){
             for(ProcessEmployInterviewRecord processEmployInterviewRecord:processEmployInterviewRecords){
                 String dname = classService.getDirectionNameByCode(processEmployInterviewRecord.getCode());
