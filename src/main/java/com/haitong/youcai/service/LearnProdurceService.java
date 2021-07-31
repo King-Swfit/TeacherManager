@@ -302,7 +302,12 @@ public class LearnProdurceService {
         return learnProducerMapper.getTalkCountByCode(code);
     }
 
-
+    /**
+     * 通过班级编号查询考试信息
+     * @date  2021/7/30 17:22
+     * @param classcode 班级编号
+     * @return java.util.List<com.haitong.youcai.entity.SimpleScoreCount>
+     */
     public List<SimpleScoreCount> getScoreCountByClasscode(String classcode) {
         return learnProducerMapper.getScoreCountByClasscode(classcode);
     }

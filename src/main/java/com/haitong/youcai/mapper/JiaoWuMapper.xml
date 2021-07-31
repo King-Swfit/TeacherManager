@@ -457,9 +457,9 @@
         <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
         WHERE typee='休学复学'
         AND timee BETWEEN #{startTime} AND #{endTime}
-        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1 and ctid != -1" >AND cb.classcode=xj.classcode</if>
         <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
-        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="centerId != -1 and ctid != -1">AND cb.classteacherId=#{ctid}</if>
         <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
         GROUP BY xj.classcode
     </select>
@@ -471,9 +471,9 @@
         <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
         WHERE xj.typee='重修'
         AND xj.timee BETWEEN #{startTime} AND #{endTime}
-        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1 and ctid != -1" >AND cb.classcode=cb.classcode</if>
         <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
-        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="centerId != -1 and ctid != -1">AND cb.classteacherId=#{ctid}</if>
         <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
         GROUP BY xj.targetClasscode
     </select>
@@ -485,9 +485,9 @@
         <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
         WHERE xj.typee='转班'
         AND timee BETWEEN #{startTime} AND #{endTime}
-        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1 and ctid != -1" >AND cb.classcode=cb.classcode</if>
         <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
-        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="centerId != -1 and ctid != -1">AND cb.classteacherId=#{ctid}</if>
         <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
         GROUP BY xj.targetClasscode
     </select>
@@ -499,9 +499,9 @@
         <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
         WHERE xj.typee='转班'
         AND xj.timee BETWEEN #{startTime} AND #{endTime}
-        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1 and ctid != -1" >AND cb.classcode=cb.classcode</if>
         <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
-        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="centerId != -1 and ctid != -1">AND cb.classteacherId=#{ctid}</if>
         <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
         GROUP BY xj.classcode
     </select>
@@ -512,9 +512,9 @@
         <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
         WHERE xj.typee='重修'
         AND timee BETWEEN #{startTime} AND #{endTime}
-        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1 and ctid != -1" >AND cb.classcode=cb.classcode</if>
         <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
-        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="centerId != -1 and ctid != -1">AND cb.classteacherId=#{ctid}</if>
         <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
         GROUP BY xj.classcode
     </select>
@@ -526,9 +526,9 @@
         <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
         WHERE xj.typee='休学I' OR typee='休学II'
         AND timee BETWEEN #{startTime} AND #{endTime}
-        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1 and ctid != -1" >AND cb.classcode=cb.classcode</if>
         <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
-        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="centerId != -1 and ctid != -1">AND cb.classteacherId=#{ctid}</if>
         <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
         GROUP BY xj.classcode
     </select>
@@ -540,9 +540,9 @@
         <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
         WHERE xj.typee='过程中自主择业-理论课结束' OR typee='过程中自主择业-理论课未结束' OR typee='就业期自主择业-已就业'
         AND xj.timee BETWEEN #{startTime} AND #{endTime}
-        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1 and ctid != -1" >AND cb.classcode=cb.classcode</if>
         <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
-        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="centerId != -1 and ctid != -1">AND cb.classteacherId=#{ctid}</if>
         <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
         GROUP BY xj.classcode
     </select>
@@ -554,9 +554,9 @@
         <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
         WHERE xj.typee='退费'
         AND xj.timee BETWEEN #{startTime} AND #{endTime}
-        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1 and ctid != -1" >AND cb.classcode=cb.classcode</if>
         <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
-        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="centerId != -1 and ctid != -1">AND cb.classteacherId=#{ctid}</if>
         <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
         GROUP BY xj.classcode
     </select>
@@ -568,9 +568,9 @@
         <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
         WHERE xj.typee='失联'
         AND xj.timee BETWEEN #{startTime} AND #{endTime}
-        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1 and ctid != -1" >AND cb.classcode=cb.classcode</if>
         <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
-        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="centerId != -1 and ctid != -1">AND cb.classteacherId=#{ctid}</if>
         <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
         GROUP BY xj.classcode
     </select>
@@ -582,9 +582,9 @@
         <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
         WHERE xj.typee='退学'
         AND xj.timee BETWEEN #{startTime} AND #{endTime}
-        <if test="centerId != -1 or ctid != -1" >AND cb.classcode=cb.classcode</if>
+        <if test="centerId != -1 and ctid != -1" >AND cb.classcode=cb.classcode</if>
         <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
-        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="centerId != -1 and ctid != -1">AND cb.classteacherId=#{ctid}</if>
         <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
         GROUP BY xj.classcode
     </select>
@@ -715,9 +715,9 @@
         <if test="centerId != -1"> INNER JOIN class_baseinfo cb</if>
         WHERE xj.typee='推迟就业'
         AND timee BETWEEN #{startTime} AND #{endTime}
-        <if test="centerId != -1 or ctid != -1" >AND xj.classcode=cb.classcode</if>
+        <if test="centerId != -1 and ctid != -1" >AND xj.classcode=cb.classcode</if>
         <if test="centerId != -1">AND cb.centerId=#{centerId}</if>
-        <if test="ctid != -1">AND cb.classteacherId=#{ctid}</if>
+        <if test="centerId != -1 and ctid != -1">AND cb.classteacherId=#{ctid}</if>
         <if test="classcode != '-1'">AND xj.classcode=#{classcode}</if>
         GROUP BY xj.classcode
     </select>

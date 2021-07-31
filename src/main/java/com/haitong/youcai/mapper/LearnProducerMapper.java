@@ -85,7 +85,14 @@ public interface LearnProducerMapper {
     List<Talk> getTalkDetailByCode(String code);
 
     SimpleTalkCount getTalkCountByCode(String code);
-
+    /**
+     * 通过班级编号查询考试信息
+     * 查询结果按照学号分组，记录总条数count
+     * 返回的就是学号和对应的考试次数信息
+     * @date  2021/7/30 17:20
+     * @param classcode 班级编号
+     * @return java.util.List<com.haitong.youcai.entity.SimpleScoreCount>
+     */
     List<SimpleScoreCount> getScoreCountByClasscode(String classcode);
 
     List<Score> getScoreDetailByCode(String code);

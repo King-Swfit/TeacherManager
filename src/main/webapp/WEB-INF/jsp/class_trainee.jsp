@@ -516,7 +516,7 @@
 
             var rows_edit = $("#tbody_edit").find("tr")
             var tdArrs0 = rows_edit.eq(0).find("td");
-            var code = tdArrs0.eq(1).text()
+            var code = tdArrs0.eq(1).find("input").val();
 
             var cname = $("#center").text()
 
@@ -699,13 +699,14 @@
                 "/class/getNextCode",
                 {"classcode":classcode},
                 function (code_new) {
+                    alert(code_new);
                     operator_type = "new"
                     var rows_edit = $("#tbody_edit").find("tr")
                     var tdArrs0 = rows_edit.eq(0).find("td");
                     var tdArrs1 = rows_edit.eq(1).find("td");
                     var tdArrs2 = rows_edit.eq(2).find("td");
 
-                    tdArrs0.eq(1).html(code_new)
+                    tdArrs0.eq(1).find("input").val(code_new);
                     tdArrs0.eq(3).find("input").val("")
                     tdArrs0.eq(5).find("select").val("男")
                     tdArrs0.eq(7).find("input").val("")
@@ -756,7 +757,7 @@
             var tdArrs1 = rows_edit.eq(1).find("td");
             var tdArrs2 = rows_edit.eq(2).find("td");
 
-            var code = tdArrs0.eq(1).text()
+            var code = tdArrs0.eq(1).find("input").val();
             var name = tdArrs0.eq(3).find("input").val()
             var gender = tdArrs0.eq(5).find("select").val()
             var card = tdArrs0.eq(7).find("input").val()
@@ -1278,7 +1279,7 @@
                                 <tbody id="tbody_edit">
                                     <tr>
                                         <td width="100px">学员学号</td>
-                                        <td width="150px">自增自动生成</td>
+                                        <td width="150px"><input class = "form-control" placeholder="自动生成" id="code"></td>
                                         <td width="100px">姓名</td>
                                         <td width="150px"><input class = "form-control" id="traineename"></td>
                                         <td width="100px">性别</td>

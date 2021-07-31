@@ -26,6 +26,7 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Administrator on 2019/5/13.
@@ -570,15 +571,21 @@ public class LearnProcessController {
 
         List<SimpleScoreCount> simpleScoreCounts = null;
         if(classcode != null && classcode.length() > 0){
+            // 通过班级编号获取学生学号和学生名字
             List<BaseinfoForTrainee> baseinfoForTrainees = learnProdurceService.getBaseinfoForTraineeByClassCode(classcode);
+            // 通过班级编号获取学生学号和对应的考试次数
             simpleScoreCounts = learnProdurceService.getScoreCountByClasscode(classcode);
             if(simpleScoreCounts == null){
                 simpleScoreCounts = new ArrayList<SimpleScoreCount>();
             }
+
             boolean isExist = false;
+            // 遍历所有学生，只要目前在班的学生，转班的没有在内
             for(BaseinfoForTrainee baseinfoForTrainee:baseinfoForTrainees){
                 isExist = false;
+
                 for(SimpleScoreCount simpleScoreCount:simpleScoreCounts){
+                    // 判断考试信息中的学号与学生信息的学号是否相等
                     if(simpleScoreCount.getCode().equals(baseinfoForTrainee.getCode())){
                         simpleScoreCount.setClasscode(classcode);
                         simpleScoreCount.setCtname(ctname);
@@ -590,7 +597,8 @@ public class LearnProcessController {
                     }
 
                 }
-                if(isExist == false){
+
+                if(!isExist){
                     SimpleScoreCount simpleScoreCount = new SimpleScoreCount();
                     simpleScoreCount.setCode(baseinfoForTrainee.getCode());
                     simpleScoreCount.setCount(0);
@@ -607,7 +615,8 @@ public class LearnProcessController {
             }
 
         }
-
+        /*过滤掉转班学生*/
+        simpleScoreCounts = simpleScoreCounts.stream().filter(s -> s.getName()!=null).collect(Collectors.toList());
         return simpleScoreCounts;
     }
 
@@ -674,17 +683,22 @@ public class LearnProcessController {
     public List<SimpleScoreCount> getScoreCountByName(String name){
 
         List<SimpleScoreCount> simpleScoreCounts = new ArrayList<>();
-        List<KVStr> trCodes;
-        List<KVStr> classcodeCtname = classService.getClasscodeCTName();//班级编号和班主任名字
+        List<KVStr> trCodes = null;
+        //班级编号和班主任名字
+        List<KVStr> classcodeCtname = classService.getClasscodeCTName();
         if (name.substring(0,3).toUpperCase().charAt(0) >= 'A' && name.substring(0,3).toUpperCase().charAt(0) <= 'Z') {
+            // 通过学号查出学生学号和班级号
             trCodes = classService.getTrcodeCcodeByCode(name);
         } else {
+            // 通过姓名查询学生学号和班级号码
             trCodes = classService.getTrcodeCcodeByTrname(name);
         }
         if(trCodes != null){
             for(KVStr codeclasscode:trCodes){
+                // 获取到学生的班级编号
                 String classcode = codeclasscode.getV();
-                String ctname = Tool.getValueByKey(classcodeCtname, classcode);//班主任名字
+                // 通过班级编号找到对应的班主任名字
+                String ctname = Tool.getValueByKey(classcodeCtname, classcode);
 
                 String code = codeclasscode.getK();
                 SimpleScoreCount simpleScoreCount = learnProdurceService.getScoreCountByCode(code);
