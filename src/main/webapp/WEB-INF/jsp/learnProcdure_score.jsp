@@ -813,15 +813,17 @@
                                             </thead>
                                             <tbody id="tbody_exams">
                                                 <c:forEach var="simpleScoreCount" items="${requestScope.simpleScoreCounts}">
-                                                    <tr>
-                                                        <td>${simpleScoreCount.code}</td>
-                                                        <td>${simpleScoreCount.name}</td>
-                                                        <td>${simpleScoreCount.classcode}</td>
-                                                        <td>${simpleScoreCount.ctname}</td>
-                                                        <td>${simpleScoreCount.count}</td>
-                                                        <td><a href="javascript:void(0)" onclick="showNewExamDlg('${simpleScoreCount.code}', '${simpleScoreCount.name}', '${simpleScoreCount.classcode}')">新增考试成绩</a></td>
-                                                        <td><a href="javascript:void(0)" onclick="showDetail('${simpleScoreCount.code}', '${simpleScoreCount.name}')">查看详情</a></td>
-                                                    </tr>
+                                                    <c:if test="${!empty simpleScoreCount.name}">
+                                                        <tr>
+                                                            <td>${simpleScoreCount.code}</td>
+                                                            <td>${simpleScoreCount.name}</td>
+                                                            <td>${simpleScoreCount.classcode}</td>
+                                                            <td>${simpleScoreCount.ctname}</td>
+                                                            <td>${simpleScoreCount.count}</td>
+                                                            <td><a href="javascript:void(0)" onclick="showNewExamDlg('${simpleScoreCount.code}', '${simpleScoreCount.name}', '${simpleScoreCount.classcode}')">新增考试成绩</a></td>
+                                                            <td><a href="javascript:void(0)" onclick="showDetail('${simpleScoreCount.code}', '${simpleScoreCount.name}')">查看详情</a></td>
+                                                        </tr>
+                                                    </c:if>
                                                 </c:forEach>
                                             </tbody>
                                         </table>
